@@ -24,6 +24,8 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController _prenomController = TextEditingController();
+  final TextEditingController _nomController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -32,6 +34,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _errorMessage = '';
 
   void _validateAndSubmit() {
+    final String prenom = _prenomController.text.trim();
+    final String nom = _nomController.text.trim();        
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String confirmPassword = _confirmPasswordController.text.trim();
@@ -82,6 +86,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
               // Logo goes here
               Image.asset('assets/images/ReSource.png', width: 100, height: 100),
               SizedBox(height: 20.0),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  hintText: 'Prenom',
+                ),
+              ),
+              SizedBox(height: 10.0),
+              TextField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  hintText: 'Nom',
+                ),
+              ),
+              SizedBox(height: 10.0),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
