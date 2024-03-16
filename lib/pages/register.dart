@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 
 void main() {
-  runApp(Register());
+  runApp(const Register());
 }
 
 class Register extends StatelessWidget {
+  const Register({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,12 +15,14 @@ class Register extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: RegistrationPage(),
+      home: const RegistrationPage(),
     );
   }
 }
 
 class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({super.key});
+
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
 }
@@ -54,6 +58,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // Here you would normally make an HTTP request to your API
 
     // For demonstration purposes, print the values
+    print('Prenom: $prenom');
+    print('Nom: $nom');
     print('Email: $email');
     print('Password: $password');
 
@@ -68,77 +74,96 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff03989e),
+      backgroundColor: const Color(0xff03989e),
       appBar: AppBar(
-        title: Text('Inscription'),
+        title: const Text('Inscription'),
+        backgroundColor: const Color(0xFFFFBD59),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 _errorMessage,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               // Logo goes here
               Image.asset('assets/images/ReSource.png', width: 100, height: 100),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextField(
-                controller: _emailController,
+                controller: _prenomController,
                 decoration: InputDecoration(
-                  hintText: 'Prenom',
+                  hintText: 'prenom',
+                  filled: true,
+                  fillColor: Colors.grey[100],
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextField(
-                controller: _emailController,
+                controller: _nomController,
                 decoration: InputDecoration(
-                  hintText: 'Nom',
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  hintText: 'nom',
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[100],
                   hintText: 'Email',
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Mot de passe',
+                  filled: true,
+                  fillColor: Colors.grey[100],
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               TextField(
                 controller: _confirmPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[100],
                   hintText: 'Confirmer le mot de passe',
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
                       // Clear fields
+                      _prenomController.clear();
+                      _nomController.clear();
                       _emailController.clear();
                       _passwordController.clear();
                       _confirmPasswordController.clear();
                     },
-                    child: Text('Annuler'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFFFBD59), // Couleur #ffbd59
+                    ),
+                    child: const Text('Annuler'),
                   ),
                   ElevatedButton(
                     onPressed: _validateAndSubmit,
-                    child: Text('Valider'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFFFBD59), // Couleur #ffbd59
+                      ),
+                    child: const Text('Valider'),
                   ),
                 ],
               ),
