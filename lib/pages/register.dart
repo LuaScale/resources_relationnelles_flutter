@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 
 void main() {
-  runApp(const Register());
+  runApp(const MyApp());
 }
 
-class Register extends StatelessWidget {
-  const Register({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class Register extends StatelessWidget {
       title: 'Inscription',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const RegistrationPage(),
     );
@@ -21,154 +23,193 @@ class Register extends StatelessWidget {
 }
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
-  _RegistrationPageState createState() => _RegistrationPageState();
+  RegistrationPageState createState() => RegistrationPageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
-  final TextEditingController _prenomController = TextEditingController();
-  final TextEditingController _nomController = TextEditingController();
+class RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
+  final TextEditingController _plainPasswordController = TextEditingController();
+  final TextEditingController _confirmplainPasswordController =
       TextEditingController();
 
-  String _errorMessage = '';
+  void _validateAndSubmit() async {
+    // Validation des champs
+    String firstname = _firstnameController.text;
+    String lastname = _lastnameController.text;
+    String email = _emailController.text;
+    String plainPassword = _plainPasswordController.text;
+    String confirmplainPassword = _confirmplainPasswordController.text;
 
-  void _validateAndSubmit() {
-    final String prenom = _prenomController.text.trim();
-    final String nom = _nomController.text.trim();        
-    final String email = _emailController.text.trim();
-    final String password = _passwordController.text.trim();
-    final String confirmPassword = _confirmPasswordController.text.trim();
-
-    // Verification que les mots de passe correspondent
-    if (password != confirmPassword) {
-      setState(() {
-        _errorMessage = 'Les mots de passe ne correspondent pas';
-      });
+    // Vérification de la validité du mail
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      _showDialog('Email invalide');
       return;
     }
 
-    // You can add more validation here such as checking email format
+    // Vérification de la force du mot de passe
+    if (!RegExp(
+            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+        .hasMatch(plainPassword)) {
+      _showDialog(
+          'Le mot de passe doit contenir au moins 8 caractères avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
+      return;
+    }
 
-    // Call your API to register the user
-    // Here you would normally make an HTTP request to your API
+    // Vérification de la correspondance des mots de passe
+    if (plainPassword != confirmplainPassword) {
+      _showDialog('Les mots de passe ne correspondent pas');
+      return;
+    }
 
-    // For demonstration purposes, print the values
-    print('Prenom: $prenom');
-    print('Nom: $nom');
-    print('Email: $email');
-    print('Password: $password');
+    // Envoi des données à l'API
+    const String apiUrl = 'http://82.66.110.4:8000/api/createAccount';
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      body: {
+        'firstname': firstname,
+        'lastname': lastname,
+        'email': email,
+        'plainPassword': plainPassword,
+      },
+    );
 
-    // Reset error message
-    setState(() {
-      _errorMessage = '';
-    });
+    if (response.statusCode == 200) {
+      // Envoi du mail avec le token de confirmation
+      // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.
+      _showDialog(
+          'Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
+    } else {
+      _showDialog('Erreur lors de l\'inscription. Veuillez réessayer.');
+    }
 
-    // Navigate to next screen or show success message
+    // Réinitialisation des champs après envoi
+    _firstnameController.clear();
+    _lastnameController.clear();
+    _emailController.clear();
+    _plainPasswordController.clear();
+    _confirmplainPasswordController.clear();
+  }
+
+  void _showDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Message'),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.yellow,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff03989e),
       appBar: AppBar(
         title: const Text('Inscription'),
-        backgroundColor: const Color(0xFFFFBD59),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                _errorMessage,
-                style: const TextStyle(color: Colors.red),
+      backgroundColor: const Color(0xFF03989E),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Image.asset(
+                'lib/assets/images/ReSource.png',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 20.0),
-              // Logo goes here
-              Image.asset('assets/images/ReSource.png', width: 100, height: 100),
-              const SizedBox(height: 20.0),
-              TextField(
-                controller: _prenomController,
-                decoration: InputDecoration(
-                  hintText: 'prenom',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                ),
+            ),
+            TextField(
+              controller: _firstnameController,
+              decoration: InputDecoration(
+                labelText: 'firstname',
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: _nomController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  hintText: 'nom',
-                ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _lastnameController,
+              decoration: InputDecoration(
+                labelText: 'lastname',
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  hintText: 'Email',
-                ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Mot de passe',
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _plainPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Mot de passe',
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              const SizedBox(height: 10.0),
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                  hintText: 'Confirmer le mot de passe',
-                ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _confirmplainPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Confirmer le mot de passe',
+                fillColor: Colors.grey[200],
+                filled: true,
               ),
-              const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      // Clear fields
-                      _prenomController.clear();
-                      _nomController.clear();
-                      _emailController.clear();
-                      _passwordController.clear();
-                      _confirmPasswordController.clear();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFFBD59), // Couleur #ffbd59
-                    ),
-                    child: const Text('Annuler'),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFBD59),
                   ),
-                  ElevatedButton(
-                    onPressed: _validateAndSubmit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFFBD59), // Couleur #ffbd59
-                      ),
-                    child: const Text('Valider'),
+                  onPressed: () {
+                    // Bouton Annuler
+                    _firstnameController.clear();
+                    _lastnameController.clear();
+                    _emailController.clear();
+                    _plainPasswordController.clear();
+                    _confirmplainPasswordController.clear();
+                  },
+                  child: const Text('Annuler'),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFFBD59),
                   ),
-                ],
-              ),
-            ],
-          ),
+                  onPressed: _validateAndSubmit,
+                  child: const Text('Valider'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

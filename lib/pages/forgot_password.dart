@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class ForgotPasswordPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
 
+  ForgotPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,16 +35,16 @@ class ForgotPasswordPage extends StatelessWidget {
                     ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   // Action à effectuer lorsque le bouton est appuyé
                   // Envoyer l'e-mail de récupération du mot de passe
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:  Color(0xFFFFBD59), // Couleur du bouton #ffbd59
+                  backgroundColor:  const Color(0xFFFFBD59), // Couleur du bouton #ffbd59
                 ),
-                child: Text('Envoyer'),
+                child: const Text('Envoyer'),
               ),
             ],
           ),

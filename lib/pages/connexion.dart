@@ -120,9 +120,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Mot de passe oublié ?',
-                        style: TextStyle(color: const Color(0xFFFFBD59)),
+                        style: TextStyle(color: Color(0xFFFFBD59)),
                         ),
                     ),
                     const SizedBox(width: 10), // Espacement entre les deux liens
@@ -130,12 +130,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RegistrationPage()),
+                          MaterialPageRoute(builder: (context) => const RegistrationPage()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Pas encore inscrit ?',
-                        style: TextStyle(color: const Color(0xFFFFBD59)),
+                        style: TextStyle(color: Color(0xFFFFBD59)),
                         ),
                     ),
                   ],
