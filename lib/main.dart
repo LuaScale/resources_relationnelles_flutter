@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resources_relationnelles_flutter/pages/ressources/liste_ressources.dart';
 import 'pages/connexion.dart';
 import 'pages/register.dart';
 
@@ -112,7 +113,10 @@ class _MyHomePageState extends State<MyHomePage> {
             }, child: const Text('S\'inscrire')),
             const SizedBox(height: 20,),
             FilledButton.tonal(onPressed: () {
-              //Action à faire pour afficher les ressources sans se connecter
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>const ListerRessourcesPage())
+              );
             }, child: const Text('Ne pas se connecter')),
           ],
         ),
