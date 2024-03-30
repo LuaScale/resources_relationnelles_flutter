@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -18,6 +17,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const RegistrationPage(),
+      debugShowCheckedModeBanner: false, // Retirer le bandeau de débug en haut à droite
     );
   }
 }
@@ -34,8 +34,9 @@ class RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _plainPasswordController = TextEditingController();
-  final TextEditingController _confirmplainPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmplainPasswordController = TextEditingController();
+
+  bool _isObscure = true;
 
   void _validateAndSubmit() async {
     // Validation des champs
@@ -52,11 +53,8 @@ class RegistrationPageState extends State<RegistrationPage> {
     }
 
     // Vérification de la force du mot de passe
-    if (!RegExp(
-            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-        .hasMatch(plainPassword)) {
-      _showDialog(
-          'Le mot de passe doit contenir au moins 8 caractères avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
+    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(plainPassword)) {
+      _showDialog('Le mot de passe doit contenir au moins 8 caractères avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
       return;
     }
 
@@ -81,8 +79,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     if (response.statusCode == 200) {
       // Envoi du mail avec le token de confirmation
       // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.
-      _showDialog(
-          'Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
+      _showDialog('Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
     } else {
       _showDialog('Erreur lors de l\'inscription. Veuillez réessayer.');
     }
@@ -127,89 +124,122 @@ class RegistrationPageState extends State<RegistrationPage> {
       backgroundColor: const Color(0xFF03989E),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Image.asset(
-                'lib/assets/images/ReSource.png',
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'lib/assets/images/ReSource.png', 
                 fit: BoxFit.cover,
+                height: 200, // Définir une hauteur fixe pour l'image
               ),
-            ),
-            TextField(
-              controller: _firstnameController,
-              decoration: InputDecoration(
-                labelText: 'firstname',
-                fillColor: Colors.grey[200],
-                filled: true,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _lastnameController,
-              decoration: InputDecoration(
-                labelText: 'lastname',
-                fillColor: Colors.grey[200],
-                filled: true,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                fillColor: Colors.grey[200],
-                filled: true,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _plainPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Mot de passe',
-                fillColor: Colors.grey[200],
-                filled: true,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _confirmplainPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Confirmer le mot de passe',
-                fillColor: Colors.grey[200],
-                filled: true,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFBD59),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: _firstnameController,
+                  decoration: InputDecoration(
+                    labelText: 'firstname',
+                    fillColor: Colors.grey[200],
+                    filled: true,
                   ),
-                  onPressed: () {
-                    // Bouton Annuler
-                    _firstnameController.clear();
-                    _lastnameController.clear();
-                    _emailController.clear();
-                    _plainPasswordController.clear();
-                    _confirmplainPasswordController.clear();
-                  },
-                  child: const Text('Annuler'),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFBD59),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: _lastnameController,
+                  decoration: InputDecoration(
+                    labelText: 'lastname',
+                    fillColor: Colors.grey[200],
+                    filled: true,
                   ),
-                  onPressed: _validateAndSubmit,
-                  child: const Text('Valider'),
                 ),
-              ],
-            ),
-          ],
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: _plainPasswordController,
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    labelText: 'Mot de passe',
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: TextField(
+                  controller: _confirmplainPasswordController,
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    labelText: 'Confirmer le mot de passe',
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFBD59),
+                    ),
+                    onPressed: () {
+                      // Bouton Annuler
+                      _firstnameController.clear();
+                      _lastnameController.clear();
+                      _emailController.clear();
+                      _plainPasswordController.clear();
+                      _confirmplainPasswordController.clear();
+                    },
+                    child: const Text('Annuler'),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFFBD59),
+                    ),
+                    onPressed: _validateAndSubmit,
+                    child: const Text('Valider'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
