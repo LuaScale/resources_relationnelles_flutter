@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
+import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 
 Future<List<Ressource>> fetchRessources() async {
   final response = await http.get(
@@ -62,7 +63,12 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
                     subtitle: Text(snapshot.data![index].description),
                     enabled: true,
                     onTap: () {
-                      //AFFICHER DETAIL RESSOURCE
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].id),
+                          ),
+                      );
                     },
                   );
                 },

@@ -1,43 +1,41 @@
+import 'package:resources_relationnelles_flutter/classes/ressource.dart';
+import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
+
 class Commentaire {
-  final int id;
+  final String id;
   final String contenu;
-  final int idRessource;
-  final bool isAccepte;
-  final int idUtilisateur;
+  final Ressource? ressource;
+  final bool? isAccepte;
+  final Utilisateur utilisateur;
   final DateTime dateCreation;
-  final DateTime dateSuppression;
+  final DateTime? dateSuppression;
 
   const Commentaire({
     required this.id,
     required this.contenu,
-    required this.idRessource,
-    required this.isAccepte,
-    required this.idUtilisateur,
+    this.ressource,
+    this.isAccepte,
+    required this.utilisateur,
     required this.dateCreation,
-    required this.dateSuppression,
+    this.dateSuppression,
   });
 
   factory Commentaire.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'id' : int id,
-        'contenu' : String contenu,
-        'idRessource' : int idRessource,
-        'isAccepte' : bool isAccepte,
-        'idUtilisateur' : int idUtilisateur,
-        'dateCreation' : DateTime dateCreation,
-        'dateSuppression' : DateTime dateSuppression,
-      } =>
-      Commentaire(
-        id: id,
-        contenu: contenu,
-        idRessource: idRessource,
-        isAccepte: isAccepte,
-        idUtilisateur: idUtilisateur,
-        dateCreation: dateCreation,
-        dateSuppression: dateSuppression,
-      ),
-      _ => throw const FormatException('Failed to create a Commentaire from JSON data.')
-    };
+    final id = json['@id'] as String;
+    final contenu = json['content'] as String;
+    final ressource = json['ressource'] as Ressource?;
+    final isAccepte = json['accepted'] as bool?;
+    Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
+    final dateCreation = DateTime.parse(json['createdAt']);
+    final dateSuppression = json['deletedAt'] as DateTime?;
+    return Commentaire(
+      id: id,
+      contenu: contenu,
+      ressource: ressource,
+      isAccepte: isAccepte,
+      utilisateur: utilisateur,
+      dateCreation: dateCreation,
+      dateSuppression: dateSuppression,
+    );
   }
 }

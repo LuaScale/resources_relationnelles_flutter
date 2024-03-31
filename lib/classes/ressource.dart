@@ -5,6 +5,7 @@ import 'package:resources_relationnelles_flutter/classes/ressource_type.dart';
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 
 class Ressource {
+  final String id;
   final String titre;
   final String description;
   final String? contenu;
@@ -18,6 +19,7 @@ class Ressource {
   final DateTime dateModification;
 
   const Ressource({
+    required this.id,
     required this.titre,
     required this.description,
     this.contenu,
@@ -32,6 +34,7 @@ class Ressource {
   });
 
   factory Ressource.fromJson(Map<String, dynamic> json) {
+    final id = json['@id'] as String;
     final titre = json['title'] as String;
     final description = json['description'] as String;
     final contenu = json['content'] as String?;
@@ -39,11 +42,12 @@ class Ressource {
     final isVisible = json['visible'] as bool?;
     final isAccepte = json['accepted'] as bool?;
     Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
-    final commentaires = json['comments'] as List<Commentaire>?;
+    final commentaires = json['comments'] as List<dynamic>?;
     final partages = json['shares'] as List<Partage>?;
     final dateCreation = json['createdAt'] as DateTime?;
     final dateModification = DateTime.parse(json['updateAt']);
     return Ressource(
+        id: id,
         titre: titre,
         description: description,
         contenu: contenu,
@@ -51,7 +55,10 @@ class Ressource {
         isVisible: isVisible,
         isAccepte: isAccepte,
         utilisateur: utilisateur,
-        commentaires: commentaires,
+        commentaires: commentaires != null
+            ? commentaires.map((commentaire) =>
+            Commentaire.fromJson(commentaire as Map<String, dynamic>)).toList()
+            : <Commentaire>[],
         partages: partages,
         dateCreation: dateCreation,
         dateModification:  dateModification
