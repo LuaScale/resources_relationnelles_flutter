@@ -33,8 +33,8 @@ class RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _lastnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _plainPasswordController = TextEditingController();
-  final TextEditingController _confirmplainPasswordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   bool _isObscure = true;
 
@@ -43,8 +43,8 @@ class RegistrationPageState extends State<RegistrationPage> {
     String firstname = _firstnameController.text;
     String lastname = _lastnameController.text;
     String email = _emailController.text;
-    String plainPassword = _plainPasswordController.text;
-    String confirmplainPassword = _confirmplainPasswordController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmPasswordController.text;
 
     // Vérification de la validité du mail
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
@@ -53,13 +53,13 @@ class RegistrationPageState extends State<RegistrationPage> {
     }
 
     // Vérification de la force du mot de passe
-    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(plainPassword)) {
+    if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(password)) {
       _showDialog('Le mot de passe doit contenir au moins 8 caractères avec au moins une minuscule, une majuscule, un chiffre et un caractère spécial.');
       return;
     }
 
     // Vérification de la correspondance des mots de passe
-    if (plainPassword != confirmplainPassword) {
+    if (password != confirmPassword) {
       _showDialog('Les mots de passe ne correspondent pas');
       return;
     }
@@ -72,7 +72,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         'firstname': firstname,
         'lastname': lastname,
         'email': email,
-        'plainPassword': plainPassword,
+        'password': password,
       },
     );
 
@@ -88,8 +88,8 @@ class RegistrationPageState extends State<RegistrationPage> {
     _firstnameController.clear();
     _lastnameController.clear();
     _emailController.clear();
-    _plainPasswordController.clear();
-    _confirmplainPasswordController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
   }
 
   void _showDialog(String message) {
@@ -102,7 +102,7 @@ class RegistrationPageState extends State<RegistrationPage> {
           actions: <Widget>[
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow,
+                backgroundColor:  const Color(0xFFFFBD59),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -120,10 +120,11 @@ class RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inscription'),
+        backgroundColor: const Color(0xFFFFBD59), // Définir la couleur de l'AppBar
       ),
       backgroundColor: const Color(0xFF03989E),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -133,33 +134,33 @@ class RegistrationPageState extends State<RegistrationPage> {
                 fit: BoxFit.cover,
                 height: 200, // Définir une hauteur fixe pour l'image
               ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+              const SizedBox(height: 0),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
                 child: TextField(
                   controller: _firstnameController,
                   decoration: InputDecoration(
-                    labelText: 'firstname',
+                    labelText: 'Prénom',
                     fillColor: Colors.grey[200],
                     filled: true,
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
                 child: TextField(
                   controller: _lastnameController,
                   decoration: InputDecoration(
-                    labelText: 'lastname',
+                    labelText: 'Nom',
                     fillColor: Colors.grey[200],
                     filled: true,
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
                 child: TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -169,11 +170,11 @@ class RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
                 child: TextField(
-                  controller: _plainPasswordController,
+                  controller: _passwordController,
                   obscureText: _isObscure,
                   decoration: InputDecoration(
                     labelText: 'Mot de passe',
@@ -190,11 +191,11 @@ class RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.75,
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
                 child: TextField(
-                  controller: _confirmplainPasswordController,
+                  controller: _confirmPasswordController,
                   obscureText: _isObscure,
                   decoration: InputDecoration(
                     labelText: 'Confirmer le mot de passe',
@@ -211,7 +212,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -224,8 +225,8 @@ class RegistrationPageState extends State<RegistrationPage> {
                       _firstnameController.clear();
                       _lastnameController.clear();
                       _emailController.clear();
-                      _plainPasswordController.clear();
-                      _confirmplainPasswordController.clear();
+                      _passwordController.clear();
+                      _confirmPasswordController.clear();
                     },
                     child: const Text('Annuler'),
                   ),

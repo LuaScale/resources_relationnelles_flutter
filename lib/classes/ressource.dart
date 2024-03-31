@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:resources_relationnelles_flutter/classes/commentaire.dart';
 import 'package:resources_relationnelles_flutter/classes/partage.dart';

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'forgot_password.dart';
-import 'register.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +16,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const AuthenticationPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class AuthenticationPage extends StatefulWidget {
-  const AuthenticationPage({super.key});
+  const AuthenticationPage({Key? key}) : super(key: key);
 
   @override
   _AuthenticationPageState createState() => _AuthenticationPageState();
@@ -30,18 +30,43 @@ class AuthenticationPage extends StatefulWidget {
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _plainPasswordController = TextEditingController();
+   bool _isObscure = true;
+
+  Future<void> _authenticate() async {
+    String email = _emailController.text;
+    String plainPassword = _plainPasswordController.text;
+
+    // Faire la requête HTTP pour récupérer les données de l'API
+    final response = await http.post(
+      Uri.parse('http://82.66.110.4:8000/api/createAccount'),
+      body: {
+        'email': email,
+        'password': plainPassword,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Authentification réussie, traiter la réponse de l'API si nécessaire
+      print('Authentification réussie');
+    } else {
+      // Authentification échouée, afficher un message d'erreur ou effectuer une action appropriée
+      print('Authentification échouée');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Connexion'),
-        backgroundColor: const Color(0xFFFFBD59), // Couleur #ffbd59 pour le fond d'écran de la navbar
+        backgroundColor: const Color(0xFFFFBD59),
       ),
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xff03989e), // Couleur verte pour le fond d'écran du body
+          color: Color(0xff03989e),
         ),
         child: Center(
           child: Padding(
@@ -50,93 +75,55 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-              const SizedBox(height: 20.0),   
-              // Logo goes here
-              Image.asset('../assets/image/ReSource.png', width: 100, height: 100),
-              const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: Colors.white), // Couleur du texte
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    filled: true,
-                    fillColor: Colors.grey[100], // Gris foncé
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)), // Couleur du texte d'indication
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  style: const TextStyle(color: Colors.white), // Couleur du texte
+                Image.asset(
+                  'lib/assets/images/ReSource.png',
+                  fit: BoxFit.cover,
+                  height: 200,
+                ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
+                child: TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: 'Mot de passe',
+                    labelText: 'Email',
+                    fillColor: Colors.grey[200],
                     filled: true,
-                    fillColor: Colors.grey[100], // Gris foncé
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)), // Couleur du texte d'indication
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.60,
+                child: TextField(
+                  controller: _plainPasswordController,
+                  obscureText: _isObscure,
+                  decoration: InputDecoration(
+                    labelText: 'Mot de passe',
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    suffixIcon: IconButton(
+                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
                     ),
                   ),
                 ),
+              ),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ElevatedButton(
-                      onPressed: () {
-                        // Action à effectuer en cas d'annulation
-                      },
+                      onPressed: _authenticate,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFBD59), // Couleur #ffbd59
+                        backgroundColor: const Color(0xFFFFBD59),
                       ),
-                      child: const Text('Annuler'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Action à effectuer en cas de validation
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFBD59), // Couleur #ffbd59
-                      ),
-                      child: const Text('Valider'),
-                    ),
-                  ],
-                ),
-                 const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Mot de passe oublié ?',
-                        style: TextStyle(color: Color(0xFFFFBD59)),
-                        ),
-                    ),
-                    const SizedBox(width: 10), // Espacement entre les deux liens
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const RegistrationPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Pas encore inscrit ?',
-                        style: TextStyle(color: Color(0xFFFFBD59)),
-                        ),
+                      child: const Text('Connexion'),
                     ),
                   ],
                 ),
