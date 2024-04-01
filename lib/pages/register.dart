@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,16 +70,21 @@ class RegistrationPageState extends State<RegistrationPage> {
     // Envoi des données à l'API
     const String apiUrl = 'http://82.66.110.4:8000/api/createAccount';
     final response = await http.post(
+      headers: {
+        'X-API-Key': 'test',
+        HttpHeaders.contentTypeHeader : "application/json"
+      },
       Uri.parse(apiUrl),
-      body: {
+      body: jsonEncode(<String, String>{
         'firstname': firstname,
         'lastname': lastname,
         'email': email,
-        'password': password,
-      },
-    );
+        'plainPassword': password,
+      }),
 
-    if (response.statusCode == 200) {
+    );
+    print(response.body);
+    if (response.statusCode == 201) {
       // Envoi du mail avec le token de confirmation
       // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.
       _showDialog('Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
