@@ -83,7 +83,6 @@ class RegistrationPageState extends State<RegistrationPage> {
       }),
 
     );
-    print(response.body);
     if (response.statusCode == 201) {
       // Envoi du mail avec le token de confirmation
       // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.

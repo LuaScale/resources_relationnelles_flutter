@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,7 +34,9 @@ class AuthenticationPage extends StatefulWidget {
 class _AuthenticationPageState extends State<AuthenticationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _plainPasswordController = TextEditingController();
-   bool _isObscure = true;
+  bool _isObscure = true;
+  final snackBarSuccess = const SnackBar(content: Text('Vous êtes connecté !'));
+  final snackBarError = const SnackBar(content: Text('Une erreur est survenue !'));
 
   Future<void> _authenticate() async {
     String email = _emailController.text;
@@ -39,19 +44,25 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     // Faire la requête HTTP pour récupérer les données de l'API
     final response = await http.post(
-      Uri.parse('http://82.66.110.4:8000/api/createAccount'),
-      body: {
+      Uri.parse('http://82.66.110.4:8000/auth'),
+      headers: {
+        'X-API-Key': 'test',
+        HttpHeaders.contentTypeHeader : "application/json"
+      },
+      body: jsonEncode(<String, String>{
         'email': email,
         'password': plainPassword,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
       // Authentification réussie, traiter la réponse de l'API si nécessaire
-      print('Authentification réussie');
+      ScaffoldMessenger.of(context).showSnackBar(snackBarSuccess);
+      var jsonResponse = jsonDecode(response.body) as Map;
+      final token = jsonResponse.values.elementAt(0);
     } else {
       // Authentification échouée, afficher un message d'erreur ou effectuer une action appropriée
-      print('Authentification échouée');
+      ScaffoldMessenger.of(context).showSnackBar(snackBarError);
     }
   }
 
