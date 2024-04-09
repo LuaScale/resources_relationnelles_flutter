@@ -7,7 +7,7 @@ import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressour
 
 Future<List<Ressource>> fetchRessources() async {
   final response = await http.get(
-    Uri.parse('http://82.66.110.4:8000/api/ressources/'),
+    Uri.parse('http://82.66.110.4:8000/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=&title='),
     headers: {
       'X-API-Key': 'test',
     },
