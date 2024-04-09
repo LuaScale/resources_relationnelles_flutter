@@ -1,15 +1,19 @@
 
 import 'package:resources_relationnelles_flutter/classes/commentaire.dart';
 import 'package:resources_relationnelles_flutter/classes/partage.dart';
+import 'package:resources_relationnelles_flutter/classes/relation_type.dart';
+import 'package:resources_relationnelles_flutter/classes/ressource_categorie.dart';
 import 'package:resources_relationnelles_flutter/classes/ressource_type.dart';
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 
 class Ressource {
-  final String id;
+  final int id;
   final String titre;
   final String description;
   final String? contenu;
   final RessourceType ressourceType;
+  final RessourceCategorie ressourceCategorie;
+  final RelationType relationType;
   final bool? isVisible;
   final bool? isAccepte;
   final Utilisateur utilisateur;
@@ -24,6 +28,8 @@ class Ressource {
     required this.description,
     this.contenu,
     required this.ressourceType,
+    required this.ressourceCategorie,
+    required this.relationType,
     this.isVisible,
     this.isAccepte,
     required this.utilisateur,
@@ -34,15 +40,17 @@ class Ressource {
   });
 
   factory Ressource.fromJson(Map<String, dynamic> json) {
-    final id = json['@id'] as String;
+    final id = json['id'] as int;
     final titre = json['title'] as String;
     final description = json['description'] as String;
     final contenu = json['content'] as String?;
     RessourceType ressourceType = RessourceType.fromJson(json["ressourceType"] as Map<String, dynamic>);
+    RessourceCategorie ressourceCategorie = RessourceCategorie.fromJson(json["ressourceCategory"] as Map<String, dynamic>);
+    RelationType relationType = RelationType.fromJson(json["relationType"] as Map<String, dynamic>);
     final isVisible = json['visible'] as bool?;
     final isAccepte = json['accepted'] as bool?;
     Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
-    final commentaires = json['comments'] as List<dynamic>?;
+    var commentaires = json['comments'] == null ? null : json['comments']['hydra:member'] as List<dynamic>?;
     final partages = json['shares'] as List<Partage>?;
     final dateCreation = json['createdAt'] as DateTime?;
     final dateModification = DateTime.parse(json['updateAt']);
@@ -52,6 +60,8 @@ class Ressource {
         description: description,
         contenu: contenu,
         ressourceType: ressourceType,
+        ressourceCategorie: ressourceCategorie,
+        relationType: relationType,
         isVisible: isVisible,
         isAccepte: isAccepte,
         utilisateur: utilisateur,
