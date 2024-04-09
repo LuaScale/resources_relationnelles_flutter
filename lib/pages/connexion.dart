@@ -3,6 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:resources_relationnelles_flutter/widgets/image_display.dart';
+import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
+import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,9 +42,19 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   final snackBarSuccess = const SnackBar(content: Text('Vous êtes connecté !'));
   final snackBarError = const SnackBar(content: Text('Une erreur est survenue !'));
 
+  
+  void _toggleObscure() {
+    setState(() {
+      _isObscure = !_isObscure;
+    });
+  }
+
   Future<void> _authenticate() async {
     String email = _emailController.text;
     String plainPassword = _plainPasswordController.text;
+
+    // Stocker la référence du ScaffoldMessenger.of(context)
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     // Faire la requête HTTP pour récupérer les données de l'API
     final response = await http.post(
@@ -57,19 +71,17 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     if (response.statusCode == 200) {
       // Authentification réussie, traiter la réponse de l'API si nécessaire
-      ScaffoldMessenger.of(context).showSnackBar(snackBarSuccess);
+      scaffoldMessenger.showSnackBar(snackBarSuccess);
       var jsonResponse = jsonDecode(response.body) as Map;
       final token = jsonResponse.values.elementAt(0);
     } else {
       // Authentification échouée, afficher un message d'erreur ou effectuer une action appropriée
-      ScaffoldMessenger.of(context).showSnackBar(snackBarError);
+      scaffoldMessenger.showSnackBar(snackBarError);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Connexion'),
@@ -87,56 +99,15 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 const SizedBox(height: 20.0),
-                Image.asset(
-                  'lib/assets/images/ReSource.png',
-                  fit: BoxFit.cover,
-                  height: 200,
-                ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.60,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    fillColor: Colors.grey[200],
-                    filled: true,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.60,
-                child: TextField(
-                  controller: _plainPasswordController,
-                  obscureText: _isObscure,
-                  decoration: InputDecoration(
-                    labelText: 'Mot de passe',
-                    fillColor: Colors.grey[200],
-                    filled: true,
-                    suffixIcon: IconButton(
-                      icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ),
+                const ImageDisplay(imagePath: 'lib/assets/images/ReSource.png', height: 200), // Affichage de l'image
+                const SizedBox(height: 10),
+                CustomTextInput(controller: _emailController, labelText: 'Email', maxLines: 1, maxLength: 50),
+                const SizedBox(height: 10),
+                PasswordInput(controller: _plainPasswordController, obscureText: _isObscure, onPressed: _toggleObscure),
                 const SizedBox(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: _authenticate,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFBD59),
-                      ),
-                      child: const Text('Connexion'),
-                    ),
-                  ],
+                CustomButton(
+                  text: 'Connexion',
+                  onPressed: _authenticate,
                 ),
               ],
             ),
