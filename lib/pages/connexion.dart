@@ -2,11 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:resources_relationnelles_flutter/services/secure_storage.dart';
 import 'package:resources_relationnelles_flutter/widgets/image_display.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
+
+import '../classes/utilisateur.dart';
+import '../services/get_user.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,10 +64,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     // Faire la requête HTTP pour récupérer les données de l'API
+    String? cle = dotenv.env['API_KEY'];
     final response = await http.post(
       Uri.parse('http://82.66.110.4:8000/auth'),
       headers: {
-        'X-API-Key': 'test',
+        'X-API-Key': '$cle',
         HttpHeaders.contentTypeHeader : "application/json"
       },
       body: jsonEncode(<String, String>{
@@ -71,9 +79,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     if (response.statusCode == 200) {
       // Authentification réussie, traiter la réponse de l'API si nécessaire
-      scaffoldMessenger.showSnackBar(snackBarSuccess);
       var jsonResponse = jsonDecode(response.body) as Map;
-      final token = jsonResponse.values.elementAt(0);
+      await SessionManager().destroy();
+      scaffoldMessenger.showSnackBar(snackBarSuccess);
+      Utilisateur user = await fetchUtilisateurByToken(jsonResponse.values.elementAt(0));
+      await SessionManager().set('user', user);
+      final SecureStorage storage = SecureStorage();
+      storage.writeSecureData('token', jsonResponse.values.elementAt(0));
     } else {
       // Authentification échouée, afficher un message d'erreur ou effectuer une action appropriée
       scaffoldMessenger.showSnackBar(snackBarError);

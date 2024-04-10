@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'pages/connexion.dart';
 import 'pages/register.dart';
 import 'pages/ressources/liste_ressources.dart';
 import 'pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() {
+  dotenv.load();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -83,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CreerRessourcePage()),
+                  MaterialPageRoute(builder: (context) => const CreerRessourcePage()),
                 );
               },
             ),

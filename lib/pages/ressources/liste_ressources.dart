@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 
 Future<List<Ressource>> fetchRessources() async {
+  String? cle = dotenv.env['API_KEY'];
   final response = await http.get(
     Uri.parse('http://82.66.110.4:8000/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=&title='),
     headers: {
-      'X-API-Key': 'test',
+      'X-API-Key': '$cle',
     },
     );
 

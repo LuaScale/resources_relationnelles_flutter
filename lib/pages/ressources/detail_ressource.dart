@@ -1,15 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 
 
 Future<Ressource> fetchRessources(int id) async {
+  String? cle = dotenv.env['API_KEY'];
   final response = await http.get(
     Uri.parse('http://82.66.110.4:8000/api/ressources/$id'),
     headers: {
-      'X-API-Key': 'test',
+      'X-API-Key': '$cle',
     },
   );
 
@@ -64,7 +67,7 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                   Text('Catégorie : ${snapshot.data!.ressourceCategorie.titre}'),
                   Text('Type de relations : ${snapshot.data!.relationType.titre}'),
                   Text(
-                      'Type de ressource : ${snapshot.data!.ressourceType.titre}'),
+                      'Type de ressource : ${snapshot.data!.ressourceType?.titre}'),
                   Text('${snapshot.data!.utilisateur.prenom} '
                       '${snapshot.data!.utilisateur.nom} - '
                       '${snapshot.data!.dateModification.day}/'
