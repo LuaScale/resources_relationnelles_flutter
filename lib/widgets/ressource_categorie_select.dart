@@ -1,15 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:resources_relationnelles_flutter/classes/ressource_categorie.dart';
 import 'package:http/http.dart' as http;
 
+import '../services/secure_storage.dart';
+
 Future<List<RessourceCategorie>> fetchRessourceCategories() async {
-  var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE3MTI3NTAzMTcsImV4cCI6MTcxMjc1MzkxNywicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoidGVzdEBhcGkuY29tIn0.eCjtD5TqU1CpYNG7tsFga4_symuBfyUif3lVHP0UIJAGSo9Msb1iBhdB33NKcJc1nkoaBgTmjVeggnhUq80t2NrABh82MaTnFomvVnJDW7Og3j1p9zU6bpz7QiMMcwT644ll2fuiPLQx6oJKB-k6qnjOpiN80PViRp0rYZbEM2C1rfsajVwvmd9RZNb-gk1eg8Jl80UKJGOJea2MU3lPCTqPLE4oAEgsRVssAgUkPsZOtDE0KuY2h46fnIrtOrpfJl9dxo2ljQ7GfK_J7NPvLKsiL6HewhxO4ZaEzFu9c10lnoqm5ZZ6DnWIM2frrDtIKGDtZ7xhcSJfezOY0kYvag';
+  String? cle = dotenv.env['API_KEY'];
+  final SecureStorage storage = SecureStorage();
+  String? token = await storage.readSecureData('token');
   final response = await http.get(
       Uri.parse('http://82.66.110.4:8000/api/ressource_categories/'),
       headers: {
-        'X-API-Key': 'test',
+        'X-API-Key': '$cle',
         'Authorization': 'Bearer $token'
       },
     );
@@ -25,7 +30,8 @@ Future<List<RessourceCategorie>> fetchRessourceCategories() async {
 
 
 class RessourceCategoriesDropdown extends StatefulWidget {
-  const RessourceCategoriesDropdown({super.key});
+  final ValueChanged<RessourceCategorie?>? onValueChanged;
+  const RessourceCategoriesDropdown({super.key, this.onValueChanged});
 
   @override
   State<RessourceCategoriesDropdown> createState() => _RessourceTypeDropdownState();
@@ -33,7 +39,7 @@ class RessourceCategoriesDropdown extends StatefulWidget {
 
 class _RessourceTypeDropdownState extends State<RessourceCategoriesDropdown> {
   late Future<List<RessourceCategorie>> futureRessourceCategories;
-  String? dropdownValue;
+  RessourceCategorie? dropdownValue;
 
   @override
   void initState() {
@@ -47,16 +53,17 @@ class _RessourceTypeDropdownState extends State<RessourceCategoriesDropdown> {
       future: futureRessourceCategories,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return DropdownButton<String>(
+          return DropdownButton<RessourceCategorie>(
             value: dropdownValue,
-            onChanged: (String? newValue) {
+            onChanged: (RessourceCategorie? newValue) {
               setState(() {
                 dropdownValue = newValue;
               });
+              widget.onValueChanged?.call(newValue);
             },
-            items: snapshot.data!.map<DropdownMenuItem<String>>((RessourceCategorie value) {
-              return DropdownMenuItem<String>(
-                value: value.titre,
+            items: snapshot.data!.map<DropdownMenuItem<RessourceCategorie>>((RessourceCategorie value) {
+              return DropdownMenuItem<RessourceCategorie>(
+                value: value,
                 child: Text(value.titre),
               );
             }).toList(),

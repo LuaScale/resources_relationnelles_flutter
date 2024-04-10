@@ -11,7 +11,7 @@ class Ressource {
   final String titre;
   final String description;
   final String? contenu;
-  final RessourceType ressourceType;
+  final RessourceType? ressourceType;
   final RessourceCategorie ressourceCategorie;
   final RelationType relationType;
   final bool? isVisible;
@@ -27,7 +27,7 @@ class Ressource {
     required this.titre,
     required this.description,
     this.contenu,
-    required this.ressourceType,
+    this.ressourceType,
     required this.ressourceCategorie,
     required this.relationType,
     this.isVisible,
@@ -44,7 +44,7 @@ class Ressource {
     final titre = json['title'] as String;
     final description = json['description'] as String;
     final contenu = json['content'] as String?;
-    RessourceType ressourceType = RessourceType.fromJson(json["ressourceType"] as Map<String, dynamic>);
+    RessourceType? ressourceType = json["ressourceType"] == null ? null : RessourceType.fromJson(json["ressourceType"] as Map<String, dynamic>);
     RessourceCategorie ressourceCategorie = RessourceCategorie.fromJson(json["ressourceCategory"] as Map<String, dynamic>);
     RelationType relationType = RelationType.fromJson(json["relationType"] as Map<String, dynamic>);
     final isVisible = json['visible'] as bool?;
@@ -73,5 +73,16 @@ class Ressource {
         dateCreation: dateCreation,
         dateModification:  dateModification
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': titre,
+      'description': description,
+      'content': contenu,
+      'ressourceType': ressourceType?.toJson(),
+      'ressourceCategory': ressourceCategorie.toJson(),
+      'relationType': relationType.toJson(),
+    };
   }
 }

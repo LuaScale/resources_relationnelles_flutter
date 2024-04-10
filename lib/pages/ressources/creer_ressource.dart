@@ -1,12 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:resources_relationnelles_flutter/classes/relation_type.dart';
+import 'package:resources_relationnelles_flutter/classes/ressource.dart';
+import 'package:resources_relationnelles_flutter/classes/ressource_categorie.dart';
+import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
+import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/relations_type_select.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_area.dart';
 
+import '../../classes/ressource_type.dart';
 import '../../widgets/ressource_categorie_select.dart';
 import '../../widgets/ressource_type_select.dart';
 
@@ -64,10 +71,22 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
     String titre = _titreController.text;
     String description = _descriptionController.text;
     String contenu = _contenuController.text;
-
-
+    RessourceType ressourceType = selectedRessourceType as RessourceType;
+    RessourceCategorie ressourceCategorie = selectedRessourceCategorie as RessourceCategorie;
+    RelationType relationType = selectedRelationType as RelationType;
+    Map<String, dynamic> ressource = {
+      'title' : titre,
+      'description' : description,
+      'content' : contenu,
+      'ressourceType' : ressourceType.id,
+      'ressourceCategory' : ressourceCategorie.id,
+      'relationType' : relationType.id,
+    };
+    RessourceServices().addRessource(ressource);
   }
-
+  RessourceType? selectedRessourceType;
+  RessourceCategorie? selectedRessourceCategorie;
+  RelationType? selectedRelationType;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,9 +106,27 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
                 CustomTextInput(controller: _titreController, labelText: 'Titre', maxLines: 1, maxLength: 50),
                 const SizedBox(height: 10),
                 // Champ de texte pour la catégorie
-                RessourceTypeDropdown(),
-                RessourceCategoriesDropdown(),
-                RelationTypesDropdown(),
+                RessourceTypeDropdown(
+                  onValueChanged: (newValue) {
+                    setState(() {
+                      selectedRessourceType = newValue;
+                    });
+                  },
+                ),
+                RessourceCategoriesDropdown(
+                  onValueChanged: (newValue) {
+                    setState(() {
+                      selectedRessourceCategorie = newValue;
+                    });
+                  },
+                ),
+                RelationTypesDropdown(
+                  onValueChanged: (newValue) {
+                    setState(() {
+                      selectedRelationType = newValue;
+                    });
+                  },
+                ),
                 const SizedBox(height: 10),
                 // Champ de texte pour la description
                 CustomTextInput(controller: _descriptionController, labelText: 'Description', maxLines: 2, maxLength: 200),
@@ -98,7 +135,7 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
                 CustomTextArea(controller: _contenuController, labelText: 'Contenu', maxLines: 5, maxLength: 1000),
                 const SizedBox(height: 20),
                 // Boutons d'ajout de photo et de vidéo
-               Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(

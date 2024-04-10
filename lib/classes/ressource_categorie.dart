@@ -1,5 +1,5 @@
 class RessourceCategorie {
-  final int? id;
+  final String? id;
   final String titre;
   final String? slug;
 
@@ -10,9 +10,17 @@ class RessourceCategorie {
   });
 
   factory RessourceCategorie.fromJson(Map<String, dynamic> json) {
-    final id = json['id'] as int?;
+    final id = json['@id'] as String?;
     final titre = json['title'] as String;
     final slug = json['slug'] as String?;
     return RessourceCategorie(id: id,titre: titre, slug: slug);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': titre,
+      'slug': slug,
+    };
   }
 }
