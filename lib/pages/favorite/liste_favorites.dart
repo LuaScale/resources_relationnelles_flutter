@@ -4,128 +4,121 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:resources_relationnelles_flutter/classes/ressource.dart';
+import 'package:resources_relationnelles_flutter/classes/favorie.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
+import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
+import 'package:resources_relationnelles_flutter/services/secure_storage.dart';
 
-Future<List<Ressource>> fetchFavorites() async {
-  String? cle = dotenv.env['API_KEY'];
-  String? apiurl = dotenv.env['API_URL'];
+Future<List<Favorie>> fetchFavories() async {
+    String? cle = dotenv.env['API_KEY'];
+    String? apiurl = dotenv.env['API_URL'];
+    final SecureStorage storage = SecureStorage();
+    String? token = await storage.readSecureData('token');
   final response = await http.get(
-    Uri.parse('$apiurl/api/favorites'),
+    Uri.parse('$apiurl/api/my-favorites'),
     headers: {
       'X-API-Key': '$cle',
+      'Authorization': 'Bearer $token',
     },
-    );
+  );
 
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-    List jsonListeRessources = jsonResponse["hydra:member"];
-    List<Ressource> listRessources = [];
-    for(var v in jsonListeRessources){
-      Ressource ressource = Ressource.fromJson(v as Map<String, dynamic>);
-      listRessources.add(ressource);
+    List jsonListeFavories = jsonResponse["hydra:member"];
+    List<Favorie> listFavories = [];
+    for(var v in jsonListeFavories){
+      Favorie favorie = Favorie.fromJson(v as Map<String, dynamic>);
+      print('test');
+      listFavories.add(favorie);
     }
-    return listRessources;
+    return listFavories;
   } else {
-    throw Exception('Failed to load ressource');
+    throw Exception('Failed to load favories');
   }
 }
 
-Future<List<Ressource>> deleteFavorite() async {
-  String? cle = dotenv.env['API_KEY'];
-  String? apiurl = dotenv.env['API_URL'];
-  final response = await http.get(
-    Uri.parse('$apiurl/api/favorites'),
-    headers: {
-      'X-API-Key': '$cle',
-    },
-    );
-
-  if (response.statusCode == 200) {
-    Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-    List jsonListeRessources = jsonResponse["hydra:member"];
-    List<Ressource> listRessources = [];
-    for(var v in jsonListeRessources){
-      Ressource ressource = Ressource.fromJson(v as Map<String, dynamic>);
-      listRessources.add(ressource);
-    }
-    return listRessources;
-  } else {
-    throw Exception('Failed to load ressource');
-  }
-}
-
-class ListerRessourcesPage extends StatefulWidget {
-  const ListerRessourcesPage({super.key});
+class ListerFavoriesPage extends StatefulWidget {
+  const ListerFavoriesPage({super.key});
 
    @override
-   State<ListerRessourcesPage> createState() => _ListerRessourcesPageState();
+   State<ListerFavoriesPage> createState() => _ListerFavoriesPageState();
 }
 
-class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
-  late Future<List<Ressource>> futureRessource;
+class _ListerFavoriesPageState extends State<ListerFavoriesPage> {
+  late Future<List<Favorie>> futureFavories;
 
   @override
   void initState() {
     super.initState();
-    futureRessource = fetchFavorites();
+    futureFavories = fetchFavories();
   }
 
-  void addFavorite(int idRessource) async{
-    const snackBarSuccess = SnackBar(content: Text('Ressource Ajouté au favoris !'));
+  void deleteFavorite(String favorieUrl) async{
+    const snackBarSuccess = SnackBar(content: Text('Favori Supprimé !'));
+    const snackBarGuest = SnackBar(content: Text('Vous devez vous connecter !'));
     const snackBarError = SnackBar(content: Text('Une erreur est survenue !'));
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    var result = await RessourceServices().addFavorite(idRessource);
+    var user = await fetchUtilisateurByToken();
+    if(user == false){
+       scaffoldMessenger.showSnackBar(snackBarGuest);
+       return;
+    }
+
+    var result = await RessourceServices().deleteFavorite(favorieUrl);
     if(result == true){
       scaffoldMessenger.showSnackBar(snackBarSuccess);
     } else {
       scaffoldMessenger.showSnackBar(snackBarError);
     }
     setState(() {
-          futureRessource = fetchRessources();
+          futureFavories = fetchFavories();
     });
   }
   
   @override
   Widget build(BuildContext context) {
 
-    const trashIcon = Icon(
+    const favIcon = Icon(
                       Icons.restore_from_trash,
                       color: Colors.red,
                       size: 24.0,
-                      semanticLabel: 'Text to announce in accessibility modes',
                     );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ressources'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Favoris'),
       ),
-      body: Center(
-        child: FutureBuilder<List<Ressource>>(
-          future: futureRessource,
+      body:
+       Center(
+        child: FutureBuilder<List<Favorie>>(
+          future: futureFavories,
           builder: (context, snapshot) {
             if(snapshot.hasData){
               return ListView.builder(
+
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(snapshot.data![index].titre),
-                    subtitle: Text(snapshot.data![index].description),
+                  return Card(
+                    margin: EdgeInsets.all(12),
+                    child: ListTile(
+                    leading: Image.network('http://82.66.110.4:8000/${snapshot.data![index].ressource.fileUrl!}'),
+                    title: Text(snapshot.data![index].ressource.titre),
                     enabled: true,
                     trailing:IconButton(icon: favIcon, onPressed: () {
-                      addFavorite(snapshot.data![index].id);
+                      deleteFavorite(snapshot.data![index].id);
                     }),
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].id),
+                            builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].ressource.id),
                           ),
                       );
                     },
+                  ),
                   );
                 },
               );

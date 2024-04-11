@@ -40,11 +40,12 @@ class RessourceServices {
   }
 
   Future<bool> addFavorite(int idRessource) async {
-  String? cle = dotenv.env['API_KEY'];
-  final SecureStorage storage = SecureStorage();
-  String? token = await storage.readSecureData('token');
+    String? cle = dotenv.env['API_KEY'];
+    String? apiurl = dotenv.env['API_URL'];
+    final SecureStorage storage = SecureStorage();
+    String? token = await storage.readSecureData('token');
   final response = await http.post(
-    Uri.parse('http://82.66.110.4:8000/api/favorites'),
+    Uri.parse('$apiurl/api/favorites'),
     headers: {
       'X-API-Key': '$cle',
       'Authorization': 'Bearer $token',
@@ -54,6 +55,26 @@ class RessourceServices {
       'ressource': '/api/ressources/$idRessource',
     }),
   );
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> deleteFavorite(String favorieUrl) async {
+    String? cle = dotenv.env['API_KEY'];
+      String? apiurl = dotenv.env['API_URL'];
+    final SecureStorage storage = SecureStorage();
+    String? token = await storage.readSecureData('token');
+    final response = await http.delete(
+      Uri.parse("$apiurl$favorieUrl"),
+      headers: {
+        'X-API-Key': '$cle',
+        'Authorization': 'Bearer $token',
+        HttpHeaders.contentTypeHeader : "application/json"
+      },
+    );
     if (response.statusCode == 201) {
       return true;
     } else {

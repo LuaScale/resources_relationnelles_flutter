@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resources_relationnelles_flutter/pages/favorite/liste_favorites.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/utilisateur/profil.dart';
 import 'package:resources_relationnelles_flutter/main.dart';
@@ -52,7 +53,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           // Naviguer vers la page "favoris"
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const CreerRessourcePage()),
+                            MaterialPageRoute(builder: (context) => const ListerFavoriesPage()),
                           );
                         }
                 ),
