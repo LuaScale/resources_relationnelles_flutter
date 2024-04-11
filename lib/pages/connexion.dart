@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
+import 'package:resources_relationnelles_flutter/pages/ressources/liste_ressources.dart';
 import 'package:resources_relationnelles_flutter/services/secure_storage.dart';
 import 'package:resources_relationnelles_flutter/widgets/image_display.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
@@ -49,7 +50,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   final snackBarSuccess = const SnackBar(content: Text('Vous êtes connecté !'));
   final snackBarError = const SnackBar(content: Text('Une erreur est survenue !'));
 
-  
   void _toggleObscure() {
     setState(() {
       _isObscure = !_isObscure;
@@ -86,6 +86,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       await SessionManager().set('user', user);
       final SecureStorage storage = SecureStorage();
       storage.writeSecureData('token', jsonResponse.values.elementAt(0));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListerRessourcesPage()),
+      );
     } else {
       // Authentification échouée, afficher un message d'erreur ou effectuer une action appropriée
       scaffoldMessenger.showSnackBar(snackBarError);

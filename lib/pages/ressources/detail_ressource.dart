@@ -9,8 +9,9 @@ import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 
 Future<Ressource> fetchRessources(int id) async {
   String? cle = dotenv.env['API_KEY'];
+    String? apiurl = dotenv.env['API_URL'];
   final response = await http.get(
-    Uri.parse('http://82.66.110.4:8000/api/ressources/$id'),
+    Uri.parse('$apiurl/api/ressources/$id'),
     headers: {
       'X-API-Key': '$cle',
     },
