@@ -60,4 +60,26 @@ class RessourceServices {
       return false;
     }
   }
+
+  Future<bool> validerRessource(int idRessource) async {
+    String? cle = dotenv.env['API_KEY'];
+    String? apiurl = dotenv.env['API_URL'];
+    final SecureStorage storage = SecureStorage();
+    String? token = await storage.readSecureData('token');
+    final response = await http.post(
+        Uri.parse('$apiurl/api/ressources/accept/$idRessource'),
+        headers: {
+          'X-API-Key': '$cle',
+          'Authorization': 'Bearer $token',
+          HttpHeaders.contentTypeHeader : "application/json"
+        },
+      body: jsonEncode({}),
+    );
+
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
