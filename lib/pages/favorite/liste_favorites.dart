@@ -30,7 +30,6 @@ Future<List<Favorie>> fetchFavories() async {
     List<Favorie> listFavories = [];
     for(var v in jsonListeFavories){
       Favorie favorie = Favorie.fromJson(v as Map<String, dynamic>);
-      print('test');
       listFavories.add(favorie);
     }
     return listFavories;

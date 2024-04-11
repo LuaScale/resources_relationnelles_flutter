@@ -75,7 +75,7 @@ class RessourceServices {
         HttpHeaders.contentTypeHeader : "application/json"
       },
     );
-    if (response.statusCode == 201) {
+    if (response.statusCode == 204) {
       return true;
     } else {
       return false;
