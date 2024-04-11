@@ -6,6 +6,7 @@ import 'pages/ressources/liste_ressources.dart';
 import 'pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 void main() {
   dotenv.load();
@@ -41,9 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFFFBD59),
-        title: Text(widget.title),
+      appBar: const CustomAppBar(
+          title: Text('Accueil'),
       ),
       backgroundColor: const Color(0xFF03989E),
       body: Center(

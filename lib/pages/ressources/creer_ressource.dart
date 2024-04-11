@@ -14,6 +14,8 @@ import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_area.dart';
 
 import '../../classes/ressource_type.dart';
+
+
 import '../../widgets/ressource_categorie_select.dart';
 import '../../widgets/ressource_type_select.dart';
 
