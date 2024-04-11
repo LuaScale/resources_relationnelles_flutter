@@ -3,6 +3,8 @@ import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; // Import du nouveau widget
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
+
 
 
 void main() {
@@ -88,14 +90,14 @@ class RegistrationPageState extends State<RegistrationPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Erreur'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -107,9 +109,8 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inscription'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Inscription'),
       ),
       backgroundColor: const Color(0xFF03989E),
       body: Center(
