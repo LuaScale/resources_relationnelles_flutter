@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; // Import du nouveau widget
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
+
 
 
 void main() {
@@ -48,7 +53,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-    void _validateAndSubmit() {
+    void _validateAndSubmit() async {
     final String firstname = _firstnameController.text.trim();
     final String lastname = _lastnameController.text.trim();
     final String email = _emailController.text.trim();
@@ -69,8 +74,32 @@ class RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    // Validation successful, continue with submission
-    // ...
+    // Envoi des données à l'API
+    const String apiUrl = 'http://82.66.110.4:8000/api/createAccount';
+    final response = await http.post(
+        headers: {
+        'X-API-Key': 'test',
+        HttpHeaders.contentTypeHeader : "application/json"
+        },
+        Uri.parse(apiUrl),
+      body: jsonEncode(<String, String>{
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': email,
+      'plainPassword': password,
+      }),);
+    if (response.statusCode == 201) {
+      // Envoi du mail avec le token de confirmation
+      // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.
+      _showErrorDialog('Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
+    } else {
+      _showErrorDialog('Erreur lors de l\'inscription. Veuillez réessayer.');
+    }
+    _firstnameController.clear();
+    _lastnameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
   }
 
   bool _isEmailValid(String email) {
@@ -88,14 +117,14 @@ class RegistrationPageState extends State<RegistrationPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Erreur'),
+          title: const Text('Information'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -107,9 +136,8 @@ class RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inscription'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Inscription'),
       ),
       backgroundColor: const Color(0xFF03989E),
       body: Center(

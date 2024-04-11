@@ -21,6 +21,7 @@ class Ressource {
   final List<Partage>? partages;
   final DateTime? dateCreation;
   final DateTime dateModification;
+  final String? fileUrl;
 
   const Ressource({
     required this.id,
@@ -37,6 +38,7 @@ class Ressource {
     this.partages,
     this.dateCreation,
     required this.dateModification,
+    this.fileUrl
   });
 
   factory Ressource.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class Ressource {
     final partages = json['shares'] as List<Partage>?;
     final dateCreation = json['createdAt'] as DateTime?;
     final dateModification = DateTime.parse(json['updateAt']);
+    final fileUrl = json['fileUrl'] as String?;
     return Ressource(
         id: id,
         titre: titre,
@@ -71,7 +74,8 @@ class Ressource {
             : <Commentaire>[],
         partages: partages,
         dateCreation: dateCreation,
-        dateModification:  dateModification
+        dateModification:  dateModification,
+        fileUrl: fileUrl
     );
   }
 
