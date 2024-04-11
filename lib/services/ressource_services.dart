@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:resources_relationnelles_flutter/services/secure_storage.dart';
 
@@ -19,14 +20,16 @@ class RessourceServices {
         'Authorization': 'Bearer $token',
       };
     response.headers.addAll(headers);
-    var body = jsonEncode(ressource);
+    var file = ressource['file'];
+    ressource.remove('file');
     ressource.forEach((key, value) {
       response.fields[key] = value;
     });
+    if(file != null) {
+      response.files.add(await http.MultipartFile.fromPath("file", file));
+    }
     var rep = await response.send();
-    print(rep);
     if (rep.statusCode == 201) {
-      print('WAHOUUUU');
       return true;
     } else {
       // If the server did not return a 201 CREATED response,

@@ -52,35 +52,39 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
         title: const Text('Ressources'),
         backgroundColor: const Color(0xFFFFBD59),
       ),
-      body: Center(
-        child: FutureBuilder<List<Ressource>>(
-          future: futureRessource,
-          builder: (context, snapshot) {
-            if(snapshot.hasData){
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(snapshot.data![index].titre),
-                    subtitle: Text(snapshot.data![index].description),
-                    enabled: true,
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].id),
-                          ),
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<List<Ressource>>(
+              future: futureRessource,
+              builder: (context, snapshot) {
+                if(snapshot.hasData){
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(snapshot.data![index].titre),
+                        subtitle: Text(snapshot.data![index].description),
+                        enabled: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].id),
+                            ),
+                          );
+                        },
                       );
                     },
                   );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
                 },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
+              ),
+            ),
+          ]
         ),
     );
   }
