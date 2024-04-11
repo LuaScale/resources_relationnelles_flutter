@@ -33,13 +33,14 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
   File? _videoFile;
 
   // Méthode pour sélectionner une image depuis la galerie
-  Future<void> _pickImage() async {
+  Future<File?> _pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _imageFile = File(pickedImage.path);
       });
+      return _imageFile;
     }
   }
 
@@ -74,6 +75,7 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
     RessourceType ressourceType = selectedRessourceType as RessourceType;
     RessourceCategorie ressourceCategorie = selectedRessourceCategorie as RessourceCategorie;
     RelationType relationType = selectedRelationType as RelationType;
+    String? file = _imageFile?.path;
     Map<String, dynamic> ressource = {
       'title' : titre,
       'description' : description,
@@ -81,8 +83,14 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
       'ressourceType' : ressourceType.id,
       'ressourceCategory' : ressourceCategorie.id,
       'relationType' : relationType.id,
+      'file' : file,
     };
     RessourceServices().addRessource(ressource);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ressource ajoutée avec succès'),
+      ),
+    );
   }
   RessourceType? selectedRessourceType;
   RessourceCategorie? selectedRessourceCategorie;

@@ -56,6 +56,7 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Image.network('http://82.66.110.4:8000/${snapshot.data!.fileUrl!}'),
                   Text(
                     snapshot.data!.titre,
                     style: DefaultTextStyle.of(context)
