@@ -6,53 +6,58 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
+import 'package:resources_relationnelles_flutter/services/commentaire_services.dart';
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
 
+import '../../classes/commentaire.dart';
 import '../../services/secure_storage.dart';
 
-Future<List<Ressource>> fetchRessources() async {
+Future<List<Commentaire>> fetchCommentaires() async {
   String? cle = dotenv.env['API_KEY'];
   String? apiurl = dotenv.env['API_URL'];
+  final SecureStorage storage = SecureStorage();
+  String? token = await storage.readSecureData('token');
   final response = await http.get(
-    Uri.parse('$apiurl/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=false&title='),
+    Uri.parse('$apiurl/api/comments?accepted=false'),
     headers: {
       'X-API-Key': '$cle',
+      'Authorization': 'Bearer $token',
     },
   );
 
   if (response.statusCode == 200) {
     Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-    List jsonListeRessources = jsonResponse["hydra:member"];
-    List<Ressource> listRessources = [];
-    for(var v in jsonListeRessources){
-      Ressource ressource = Ressource.fromJson(v as Map<String, dynamic>);
-      listRessources.add(ressource);
+    List jsonListCommentaires = jsonResponse["hydra:member"];
+    List<Commentaire> listCommentaires = [];
+    for(var v in jsonListCommentaires){
+      Commentaire commentaire = Commentaire.fromJson(v as Map<String, dynamic>);
+      listCommentaires.add(commentaire);
     }
-    return listRessources;
+    return listCommentaires;
   } else {
-    throw Exception('Failed to load ressource');
+    throw Exception('Erreur lors du chargement des commentaires');
   }
 }
 
-class ListerRessourcesRestreintesPage extends StatefulWidget {
-  const ListerRessourcesRestreintesPage({super.key});
+class ListerCommentairesPage extends StatefulWidget {
+  const ListerCommentairesPage({super.key});
 
   @override
-  State<ListerRessourcesRestreintesPage> createState() => _ListerRessourcesRestreintesPageState();
+  State<ListerCommentairesPage> createState() => _ListerCommentairesPageState();
 }
 
-class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestreintesPage> {
-  late Future<List<Ressource>> futureRessource;
+class _ListerCommentairesPageState extends State<ListerCommentairesPage> {
+  late Future<List<Commentaire>> futureCommentaires;
 
   @override
   void initState() {
     super.initState();
-    futureRessource = fetchRessources();
+    futureCommentaires = fetchCommentaires();
   }
 
-  void validerRessource(int idRessource) async{
-    const snackBarSuccess = SnackBar(content: Text('Ressource validée avec succès !'));
+  void validerCommentaire(int idCommentaire) async{
+    const snackBarSuccess = SnackBar(content: Text('Commentaire validé avec succès !'));
     const snackBarGuest = SnackBar(content: Text('Vous devez vous connecter !'));
     const snackBarError = SnackBar(content: Text('Une erreur est survenue !'));
 
@@ -64,7 +69,7 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
       return;
     }
 
-    var result = await RessourceServices().validerRessource(idRessource);
+    var result = await CommentaireServices().validerCommentaire(idCommentaire);
     if(result == true){
       scaffoldMessenger.showSnackBar(snackBarSuccess);
     } else {
@@ -72,7 +77,7 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
     }
 
     setState(() {
-      futureRessource = fetchRessources();
+      futureCommentaires = fetchCommentaires();
     });
   }
 
@@ -87,13 +92,13 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Valider les ressources'),
+        title: const Text('Modérer les commentaires'),
         backgroundColor: const Color(0xFFFFBD59),
       ),
       body:
       Center(
-        child: FutureBuilder<List<Ressource>>(
-          future: futureRessource,
+        child: FutureBuilder<List<Commentaire>>(
+          future: futureCommentaires,
           builder: (context, snapshot) {
             if(snapshot.hasData){
               return ListView.builder(
@@ -103,20 +108,12 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
                   return Card(
                     margin: EdgeInsets.all(20),
                     child: ListTile(
-                      leading: Image.network('http://82.66.110.4:8000/${snapshot.data![index].fileUrl!}'),
-                      title: Text(snapshot.data![index].titre),
-                      subtitle: Text(snapshot.data![index].description),
+                      title: Text(snapshot.data![index].contenu),
                       enabled: true,
                       trailing:IconButton(icon: favIcon, onPressed: () {
-                        validerRessource(snapshot.data![index].id);
+                        validerCommentaire(snapshot.data![index].id);
                       }),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailRessourcePage(idRessource: snapshot.data![index].id),
-                          ),
-                        );
                       },
                     ),
                   );

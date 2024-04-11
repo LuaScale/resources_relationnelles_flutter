@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 
 import '../../widgets/custom_appbar.dart';
+import 'lister_commentaires.dart';
 import 'lister_ressources_restreintes.dart';
 
 class PanelModeration extends StatelessWidget {
@@ -35,7 +36,7 @@ class PanelModeration extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CreerRessourcePage()), // Remplacez par la page de modification
+                  MaterialPageRoute(builder: (context) => ListerCommentairesPage()), // Remplacez par la page de modification
                 );
               },
               child: Icon(Icons.comment_outlined),
