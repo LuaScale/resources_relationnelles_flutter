@@ -53,10 +53,10 @@ class ProfilePage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          '$label',
+          label,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        SizedBox(width: 10), // Espacement entre le label et la valeur
+        const SizedBox(width: 10), // Espacement entre le label et la valeur
         Text(
           value,
           style: const TextStyle(fontSize: 18),

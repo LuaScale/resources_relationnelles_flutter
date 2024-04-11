@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
+import 'package:resources_relationnelles_flutter/pages/utilisateur/profil.dart';
 import 'package:resources_relationnelles_flutter/main.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -17,7 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.blueGrey, // Couleur de fond spécifiée (jaune)
+      backgroundColor: const Color(0xFFFFBD59), // Couleur de fond spécifiée (jaune)
       title: title, // Ajout du titre à l'AppBar
       actions: [
         IconButton(
@@ -46,7 +47,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   // Naviguer vers la page "profil"
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CreerRessourcePage()),
+                    MaterialPageRoute(builder: (context) => const ProfilePage()),
                   );
                 }
         ),
