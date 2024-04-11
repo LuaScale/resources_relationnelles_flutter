@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
+import 'package:resources_relationnelles_flutter/pages/commentaires/ajout_commentaire.dart';
 
 
 Future<Ressource> fetchRessources(int id) async {
@@ -35,7 +36,6 @@ class DetailRessourcePage extends StatefulWidget {
 
 class _ListerRessourcesPageState extends State<DetailRessourcePage> {
   late Future<Ressource> futureRessource;
-
   @override
   void initState() {
     super.initState();
@@ -92,6 +92,15 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                       },
                     ),
                   ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AjoutCommentaire(ressourceId: snapshot.data!.id,)),
+                      );
+                    },
+                    child: const Icon(Icons.comment),
+                  )
                 ],
               );
             } else if (snapshot.hasError) {

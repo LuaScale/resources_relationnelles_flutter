@@ -23,7 +23,6 @@ Future<bool> ajoutCommentaire(int idRessource, String commentaire) async {
       'content': commentaire,
     }),
   );
-  print(response.body);
   if (response.statusCode == 201) {
     print('Commentaire ajouté avec succès');
     return true;
@@ -80,6 +79,7 @@ class _AjoutCommentaireState extends State<AjoutCommentaire> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     ajoutCommentaire(widget.ressourceId, _commentaire);
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Soumettre'),

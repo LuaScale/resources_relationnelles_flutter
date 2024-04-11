@@ -9,7 +9,7 @@ import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressour
 Future<List<Ressource>> fetchRessources() async {
   String? cle = dotenv.env['API_KEY'];
   final response = await http.get(
-    Uri.parse('http://82.66.110.4:8000/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=&title='),
+    Uri.parse('http://82.66.110.4:8000/api/ressources?page=&itemsPerPage=&pagination=&visible=true&accepted=true&title='),
     headers: {
       'X-API-Key': '$cle',
     },
