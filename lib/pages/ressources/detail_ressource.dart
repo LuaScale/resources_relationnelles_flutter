@@ -6,6 +6,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/commentaires/ajout_commentaire.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 
 Future<Ressource> fetchRessources(int id) async {
@@ -46,9 +47,8 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ressource'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Détail'),
       ),
       body: FutureBuilder<Ressource>(
           future: futureRessource,

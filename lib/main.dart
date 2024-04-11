@@ -41,58 +41,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-          title: Text('Accueil'),
-      ),
-      backgroundColor: const Color(0xFF03989E),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CustomButton(
-              text: 'Se connecter',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthenticationPage()),
-                );
-              },
-            ),
-            const SizedBox(height: 20,),
-            CustomButton(
-              text: 'S\'inscrire',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegistrationPage()),
-                );
-              },
-            ),
-            const SizedBox(height: 20,),
-            CustomButton(
-              text: 'Ne pas se connecter',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ListerRessourcesPage()),
-                );
-              },
-            ),
-            const SizedBox(height: 20,),
-            CustomButton(
-              text: 'Ajouter une ressource',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CreerRessourcePage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+    return ListerRessourcesPage();
   }
 }
 

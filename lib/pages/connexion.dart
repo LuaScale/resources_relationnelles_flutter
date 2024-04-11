@@ -12,6 +12,7 @@ import 'package:resources_relationnelles_flutter/widgets/image_display.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 import '../classes/utilisateur.dart';
 import '../services/get_user.dart';
@@ -99,9 +100,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Connexion'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Ressources'),
       ),
       body: Container(
         decoration: const BoxDecoration(

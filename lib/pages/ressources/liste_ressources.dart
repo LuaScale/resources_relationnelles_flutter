@@ -8,36 +8,13 @@ import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 Future<List<Ressource>> fetchRessources() async {
   String? cle = dotenv.env['API_KEY'];
   String? apiurl = dotenv.env['API_URL'];
   final response = await http.get(
     Uri.parse('$apiurl/api/ressources?page=&itemsPerPage=&pagination=&visible=true&accepted=true&title='),
-    headers: {
-      'X-API-Key': '$cle',
-    },
-    );
-
-  if (response.statusCode == 200) {
-    Map<String, dynamic> jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-    List jsonListeRessources = jsonResponse["hydra:member"];
-    List<Ressource> listRessources = [];
-    for(var v in jsonListeRessources){
-      Ressource ressource = Ressource.fromJson(v as Map<String, dynamic>);
-      listRessources.add(ressource);
-    }
-    return listRessources;
-  } else {
-    throw Exception('Failed to load ressource');
-  }
-}
-
-Future<List<Ressource>> addTofavorite() async {
-  String? cle = dotenv.env['API_KEY'];
-  String? apiurl = dotenv.env['API_URL'];
-  final response = await http.get(
-    Uri.parse('$apiurl/api/favorites'),
     headers: {
       'X-API-Key': '$cle',
     },
@@ -107,9 +84,8 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
                       semanticLabel: 'Text to announce in accessibility modes',
                     );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ressources'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Ressources'),
       ),
       body:
        Center(

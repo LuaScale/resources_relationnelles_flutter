@@ -12,6 +12,7 @@ import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/relations_type_select.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_area.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 import '../../classes/ressource_type.dart';
 
@@ -100,9 +101,8 @@ class _CreerRessourcePageState extends State<CreerRessourcePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Créer une ressource'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+          title: Text('Créer'),
       ),
       backgroundColor: const Color(0xFF03989E),
       body: Center(
