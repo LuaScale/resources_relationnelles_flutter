@@ -84,8 +84,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       await SessionManager().destroy();
       scaffoldMessenger.showSnackBar(snackBarSuccess);
       final SecureStorage storage = SecureStorage();
-      storage.writeSecureData('token', jsonResponse.values.elementAt(0));
-      Utilisateur user = await fetchUtilisateurByToken();
+      await storage.writeSecureData('token', jsonResponse.values.elementAt(0));
+      dynamic user = await fetchUtilisateurByToken();
+      if(user == false){
+        throw Exception("Impossible de récupérer l'utilisateur");
+      }
       await SessionManager().set('user', user);
       Navigator.push(
         context,

@@ -13,4 +13,8 @@ class SecureStorage {
     await _secureStorage.read(key: key);
     return readData;
   }
+
+    Future<void> delteSecureData(var key) async {
+    await _secureStorage.delete(key: key);
+  }
 }
