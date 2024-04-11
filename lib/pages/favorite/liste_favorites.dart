@@ -6,14 +6,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
-import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
 
-Future<List<Ressource>> fetchRessources() async {
+Future<List<Ressource>> fetchFavorites() async {
   String? cle = dotenv.env['API_KEY'];
   String? apiurl = dotenv.env['API_URL'];
   final response = await http.get(
-    Uri.parse('$apiurl/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=&title='),
+    Uri.parse('$apiurl/api/favorites'),
     headers: {
       'X-API-Key': '$cle',
     },
@@ -33,7 +32,7 @@ Future<List<Ressource>> fetchRessources() async {
   }
 }
 
-Future<List<Ressource>> addTofavorite() async {
+Future<List<Ressource>> deleteFavorite() async {
   String? cle = dotenv.env['API_KEY'];
   String? apiurl = dotenv.env['API_URL'];
   final response = await http.get(
@@ -70,21 +69,14 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
   @override
   void initState() {
     super.initState();
-    futureRessource = fetchRessources();
+    futureRessource = fetchFavorites();
   }
 
   void addFavorite(int idRessource) async{
     const snackBarSuccess = SnackBar(content: Text('Ressource Ajouté au favoris !'));
-    const snackBarGuest = SnackBar(content: Text('Vous devez vous connecter !'));
     const snackBarError = SnackBar(content: Text('Une erreur est survenue !'));
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-    var user = await fetchUtilisateurByToken();
-    if(user == false){
-       scaffoldMessenger.showSnackBar(snackBarGuest);
-       return;
-    }
 
     var result = await RessourceServices().addFavorite(idRessource);
     if(result == true){
@@ -100,9 +92,9 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
   @override
   Widget build(BuildContext context) {
 
-    const favIcon = Icon(
-                      Icons.favorite,
-                      color: Colors.black,
+    const trashIcon = Icon(
+                      Icons.restore_from_trash,
+                      color: Colors.red,
                       size: 24.0,
                       semanticLabel: 'Text to announce in accessibility modes',
                     );
@@ -111,20 +103,15 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
         title: const Text('Ressources'),
         backgroundColor: const Color(0xFFFFBD59),
       ),
-      body:
-       Center(
+      body: Center(
         child: FutureBuilder<List<Ressource>>(
           future: futureRessource,
           builder: (context, snapshot) {
             if(snapshot.hasData){
               return ListView.builder(
-
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    margin: EdgeInsets.all(20),
-                    child: ListTile(
-                    leading: Image.network('http://82.66.110.4:8000/${snapshot.data![index].fileUrl!}'),
+                  return ListTile(
                     title: Text(snapshot.data![index].titre),
                     subtitle: Text(snapshot.data![index].description),
                     enabled: true,
@@ -139,7 +126,6 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
                           ),
                       );
                     },
-                  ),
                   );
                 },
               );

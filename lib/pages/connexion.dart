@@ -82,10 +82,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       var jsonResponse = jsonDecode(response.body) as Map;
       await SessionManager().destroy();
       scaffoldMessenger.showSnackBar(snackBarSuccess);
-      Utilisateur user = await fetchUtilisateurByToken(jsonResponse.values.elementAt(0));
-      await SessionManager().set('user', user);
       final SecureStorage storage = SecureStorage();
       storage.writeSecureData('token', jsonResponse.values.elementAt(0));
+      Utilisateur user = await fetchUtilisateurByToken();
+      await SessionManager().set('user', user);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ListerRessourcesPage()),
