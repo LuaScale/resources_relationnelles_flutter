@@ -14,7 +14,7 @@ Future<List<Ressource>> fetchRessources() async {
   String? cle = dotenv.env['API_KEY'];
   String? apiurl = dotenv.env['API_URL'];
   final response = await http.get(
-    Uri.parse('$apiurl/api/ressources?page=&itemsPerPage=&pagination=&visible=true&accepted=true&title='),
+    Uri.parse('$apiurl/api/ressources?page=&itemsPerPage=&pagination=&visible=&accepted=true&title='),
     headers: {
       'X-API-Key': '$cle',
     },
