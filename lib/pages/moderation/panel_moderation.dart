@@ -10,7 +10,7 @@ class PanelModeration extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        title: Text('Accueil'),
+        title: Text('Moderation'),
       ),
       body: Center(
         child: Column(
@@ -19,6 +19,7 @@ class PanelModeration extends StatelessWidget {
             Text('Accepter des ressources', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             FloatingActionButton(
+              heroTag: 'ressource',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -33,6 +34,7 @@ class PanelModeration extends StatelessWidget {
             Text('Modérer les commentaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
             FloatingActionButton(
+              heroTag: 'comment',
               onPressed: () {
                 Navigator.push(
                   context,

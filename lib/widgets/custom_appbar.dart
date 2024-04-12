@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 import 'package:resources_relationnelles_flutter/pages/admin/admin_panel.dart';
 import 'package:resources_relationnelles_flutter/pages/favorite/liste_favorites.dart';
+import 'package:resources_relationnelles_flutter/pages/moderation/panel_moderation.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/utilisateur/profil.dart';
 import 'package:resources_relationnelles_flutter/main.dart';
@@ -46,6 +47,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const AdminPanelPage()),
+                          );
+                        }
+                ),
+                if(user != false && (user.roles.contains('ROLE_ADMIN') || user.roles.contains('ROLE_MODERATOR')))
+                IconButton(
+                  icon: const Icon(Icons.remove_moderator_outlined),
+                  onPressed:  () {
+                          // Naviguer vers la page "profil"
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PanelModeration()),
                           );
                         }
                 ),

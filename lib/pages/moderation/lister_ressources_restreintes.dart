@@ -8,6 +8,7 @@ import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
+import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 import '../../services/secure_storage.dart';
 
@@ -86,9 +87,8 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
       semanticLabel: 'Text to announce in accessibility modes',
     );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Valider les ressources'),
-        backgroundColor: const Color(0xFFFFBD59),
+      appBar: const CustomAppBar(
+        title: Text('Moderation des Ressource'),
       ),
       body:
       Center(
