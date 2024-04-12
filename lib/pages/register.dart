@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
@@ -7,12 +8,6 @@ import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; // Import du nouveau widget
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
-
-
-
-void main() {
-  runApp(const MyApp());
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -76,9 +71,10 @@ class RegistrationPageState extends State<RegistrationPage> {
 
     // Envoi des données à l'API
     const String apiUrl = 'http://82.66.110.4:8000/api/createAccount';
+    String? cle = dotenv.env['API_KEY'];
     final response = await http.post(
         headers: {
-        'X-API-Key': 'test',
+        'X-API-Key': '$cle',
         HttpHeaders.contentTypeHeader : "application/json"
         },
         Uri.parse(apiUrl),
