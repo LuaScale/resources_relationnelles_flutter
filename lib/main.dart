@@ -8,8 +8,9 @@ import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
-void main() {
-  dotenv.load();
+Future main() async {
+  await dotenv.load();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFFBD59)),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: '(RE)SOURCE RELATIONNELLES - Accueil'),
+      home: const ListerRessourcesPage(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -41,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return ListerRessourcesPage();
+    return const ListerRessourcesPage();
   }
 }
 
