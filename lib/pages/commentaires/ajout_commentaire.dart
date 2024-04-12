@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 
 import '../../services/secure_storage.dart';
 
@@ -79,7 +80,12 @@ class _AjoutCommentaireState extends State<AjoutCommentaire> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     ajoutCommentaire(widget.ressourceId, _commentaire);
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetailRessourcePage(idRessource: widget.ressourceId),
+                      ),
+                    );
                   }
                 },
                 child: const Text('Soumettre'),

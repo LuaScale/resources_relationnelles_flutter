@@ -75,7 +75,10 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                       '${snapshot.data!.dateModification.month}/'
                       '${snapshot.data!.dateModification.year}'),
                   const Divider(),
-                    Text(snapshot.data!.contenu!),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Text(snapshot.data!.contenu!),
+                  ),
                     FloatingActionButton(
                       onPressed: () {
                         Navigator.push(
