@@ -111,7 +111,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           color: Color(0xff03989e),
         ),
         child: Center(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
