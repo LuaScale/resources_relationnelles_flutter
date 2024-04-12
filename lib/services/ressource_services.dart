@@ -39,7 +39,7 @@ class RessourceServices {
     }
   }
 
-  Future<bool> addFavorite(int idRessource) async {
+  Future<String> addFavorite(int idRessource) async {
     String? cle = dotenv.env['API_KEY'];
     String? apiurl = dotenv.env['API_URL'];
     final SecureStorage storage = SecureStorage();
@@ -55,11 +55,14 @@ class RessourceServices {
       'ressource': '/api/ressources/$idRessource',
     }),
   );
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      return false;
-    }
+  switch(response.statusCode){
+    case 201:
+      return 'Ressource ajouté avec succès';
+    case 312: 
+      return 'La ressource est dèjà en favorie';
+    default:
+      return 'Un problème est survenue';
+  }
   }
 
   Future<bool> addCategorie(String categorie) async {

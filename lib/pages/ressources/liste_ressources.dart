@@ -51,9 +51,7 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
   }
 
   void addFavorite(int idRessource) async{
-    const snackBarSuccess = SnackBar(content: Text('Ressource Ajouté au favoris !'));
     const snackBarGuest = SnackBar(content: Text('Vous devez vous connecter !'));
-    const snackBarError = SnackBar(content: Text('Une erreur est survenue !'));
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -64,11 +62,8 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
     }
 
     var result = await RessourceServices().addFavorite(idRessource);
-    if(result == true){
-      scaffoldMessenger.showSnackBar(snackBarSuccess);
-    } else {
-      scaffoldMessenger.showSnackBar(snackBarError);
-    }
+    var snackBarResult = SnackBar(content: Text(result));
+    scaffoldMessenger.showSnackBar(snackBarResult);
     setState(() {
           futureRessource = fetchRessources();
     });

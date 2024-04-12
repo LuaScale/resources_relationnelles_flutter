@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 import 'package:resources_relationnelles_flutter/services/secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<dynamic> fetchUtilisateurByToken() async {
-  final SecureStorage storage = SecureStorage();
-  String? token = await storage.readSecureData('token');
+    String? cle = dotenv.env['API_KEY'];
+    String? apiurl = dotenv.env['API_URL'];
+    final SecureStorage storage = SecureStorage();
+    String? token = await storage.readSecureData('token');
   final response = await http.get(
-      Uri.parse('http://82.66.110.4:8000/api/users/current'),
+      Uri.parse('$apiurl/api/users/current'),
       headers: {
-      'X-API-Key': 'test',
+      'X-API-Key': '$cle',
       'Authorization': 'Bearer $token'
       },
   );
