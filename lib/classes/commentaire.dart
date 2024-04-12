@@ -2,11 +2,11 @@ import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 
 class Commentaire {
-  final String id;
+  final int id;
   final String contenu;
-  final Ressource? ressource;
+  final String? ressource;
   final bool? isAccepte;
-  final Utilisateur utilisateur;
+  final dynamic utilisateur;
   final DateTime dateCreation;
   final DateTime? dateSuppression;
 
@@ -21,11 +21,18 @@ class Commentaire {
   });
 
   factory Commentaire.fromJson(Map<String, dynamic> json) {
-    final id = json['@id'] as String;
+    dynamic utilisateur;
+    var i = json['@id'] as String;
+    i = i.substring(14);
+    final id = int.parse(i);
     final contenu = json['content'] as String;
-    final ressource = json['ressource'] as Ressource?;
+    final ressource = json['ressource'] as String?;
     final isAccepte = json['accepted'] as bool?;
-    Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
+    if(json['user'] is Map<String, dynamic>){
+      Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
+    } else {
+      final utilisateur = json['user'] as String;
+    }
     final dateCreation = DateTime.parse(json['createdAt']);
     final dateSuppression = json['deletedAt'] as DateTime?;
     return Commentaire(
@@ -37,5 +44,13 @@ class Commentaire {
       dateCreation: dateCreation,
       dateSuppression: dateSuppression,
     );
+  }
+
+  int getIdRessource(){
+    if(ressource != null){
+      String? r = ressource?.substring(16);
+      return int.parse(r!);
+    }
+    return 0;
   }
 }

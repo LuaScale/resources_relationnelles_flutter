@@ -26,10 +26,11 @@ class Utilisateur {
     }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'firstname': prenom,
       'lastname': nom,
       'email': email,
-      'plainPassword': password,
+      'roles': roles,
     };
   }
 }
