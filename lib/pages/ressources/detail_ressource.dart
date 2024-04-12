@@ -54,10 +54,9 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
           future: futureRessource,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Image.network('http://82.66.110.4:8000/${snapshot.data!.fileUrl!}'),
+              return SingleChildScrollView(
+                child: Column(children: <Widget>[
+                    Image.network('http://82.66.110.4:8000/${snapshot.data!.fileUrl!}'),
                   Text(
                     snapshot.data!.titre,
                     style: DefaultTextStyle.of(context)
@@ -76,33 +75,30 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                       '${snapshot.data!.dateModification.month}/'
                       '${snapshot.data!.dateModification.year}'),
                   const Divider(),
-                  Text(
-                    snapshot.data!.description,
-                  ),
-                  const Divider(),
-                  Text(snapshot.data!.contenu!),
-                  Expanded(
-                    flex: 1,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
+                    Text(snapshot.data!.contenu!),
+                    FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AjoutCommentaire(ressourceId: snapshot.data!.id,)),
+                        );
+                      },
+                      child: const Icon(Icons.comment),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
                       itemCount: snapshot.data!.commentaires!.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(snapshot.data!.commentaires![index].contenu),
+                        return Card(
+                          margin: EdgeInsets.all(20),
+                          child: ListTile(
+                          leading: const Icon(Icons.switch_account_outlined),
+                          subtitle: Text(snapshot.data!.commentaires![index].contenu),
+                        ),
                         );
                       },
                     ),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AjoutCommentaire(ressourceId: snapshot.data!.id,)),
-                      );
-                    },
-                    child: const Icon(Icons.comment),
-                  )
-                ],
+                ],),
               );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
