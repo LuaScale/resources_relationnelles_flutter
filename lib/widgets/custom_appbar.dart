@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
+import 'package:resources_relationnelles_flutter/pages/admin/admin_panel.dart';
 import 'package:resources_relationnelles_flutter/pages/favorite/liste_favorites.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/utilisateur/profil.dart';
@@ -32,10 +34,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: CircularProgressIndicator()),
           );
         } else {
-                          return AppBar(
+          return AppBar(
               backgroundColor: const Color(0xFFFFBD59), // Couleur de fond spécifiée (jaune)
               title: title, // Ajout du titre à l'AppBar
               actions: [
+                if(user != false && user.roles.contains('ROLE_ADMIN'))
+                IconButton(
+                  icon: const Icon(Icons.admin_panel_settings),
+                  onPressed:  () {
+                          // Naviguer vers la page "profil"
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const AdminPanelPage()),
+                          );
+                        }
+                ),
                 IconButton(
                   icon: const Icon(Icons.home),
                   onPressed: () {
