@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:resources_relationnelles_flutter/widgets/text_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
-import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; // Import du nouveau widget
+import 'package:resources_relationnelles_flutter/widgets/custom_button_inactive.dart'; // Import du widget CustomButtonInactive
+import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; // Import du widget ImageDisplay
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 class MyApp extends StatelessWidget {
@@ -41,6 +42,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   bool _isObscure = true;
+  bool _isPolicyAccepted = false; // Nouvelle variable pour suivre l'état de la checkbox
 
   void _toggleObscure() {
     setState(() {
@@ -48,12 +50,13 @@ class RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-    void _validateAndSubmit() async {
+  void _validateAndSubmit() async {
     final String firstname = _firstnameController.text.trim();
     final String lastname = _lastnameController.text.trim();
     final String email = _emailController.text.trim();
-    final String password = _passwordController.text;
+    final String password = _passwordController.text.trim();
 
+    // Validation des champs
     if (firstname.isEmpty || lastname.isEmpty) {
       _showErrorDialog('Veuillez entrer votre nom et prénom.');
       return;
@@ -69,33 +72,41 @@ class RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
+    if (password != _confirmPasswordController.text) {
+      _showErrorDialog('Les mots de passe ne correspondent pas.');
+      return;
+    }
+
+    if (!_isPolicyAccepted) {
+      _showErrorDialog('Vous devez accepter la politique de confidentialité.');
+      return;
+    }
+
     // Envoi des données à l'API
     const String apiUrl = 'http://82.66.110.4:8000/api/createAccount';
     String? cle = dotenv.env['API_KEY'];
     final response = await http.post(
-        headers: {
+      headers: {
         'X-API-Key': '$cle',
-        HttpHeaders.contentTypeHeader : "application/json"
-        },
-        Uri.parse(apiUrl),
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      Uri.parse(apiUrl),
       body: jsonEncode(<String, String>{
-      'firstname': firstname,
-      'lastname': lastname,
-      'email': email,
-      'plainPassword': password,
-      }),);
+        'firstname': firstname,
+        'lastname': lastname,
+        'email': email,
+        'plainPassword': password,
+      }),
+    );
+
     if (response.statusCode == 201) {
-      // Envoi du mail avec le token de confirmation
-      // Cette partie doit être implémentée en utilisant un service d'envoi de mails comme SendGrid, Mailgun, etc.
       _showErrorDialog('Inscription réussie. Veuillez vérifier votre email pour confirmer votre inscription.');
     } else {
       _showErrorDialog('Erreur lors de l\'inscription. Veuillez réessayer.');
     }
-    _firstnameController.clear();
-    _lastnameController.clear();
-    _emailController.clear();
-    _passwordController.clear();
-    _confirmPasswordController.clear();
+
+    // Effacement des champs
+    _resetFields();
   }
 
   bool _isEmailValid(String email) {
@@ -128,13 +139,10 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-          title: Text('Inscription'),
-      ),
+      appBar: const CustomAppBar(title: Text('Inscription')),
       backgroundColor: const Color(0xFF03989E),
       body: Center(
         child: Padding(
@@ -143,7 +151,7 @@ class RegistrationPageState extends State<RegistrationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const ImageDisplay(imagePath: 'lib/assets/images/ReSource.png', height: 200), // Utilisation du nouveau widget
+                const ImageDisplay(imagePath: 'lib/assets/images/ReSource.png', height: 150),
                 CustomTextInput(controller: _firstnameController, labelText: 'Prénom', maxLines: 1, maxLength: 100),
                 const SizedBox(height: 10),
                 CustomTextInput(controller: _lastnameController, labelText: 'Nom', maxLines: 1, maxLength: 1000),
@@ -154,11 +162,40 @@ class RegistrationPageState extends State<RegistrationPage> {
                 const SizedBox(height: 10),
                 PasswordInput(controller: _confirmPasswordController, obscureText: _isObscure, onPressed: _toggleObscure),
                 const SizedBox(height: 20),
+                // Ajout de la checkbox et du texte
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: _isPolicyAccepted,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isPolicyAccepted = value ?? false;
+                            });
+                          },
+                        ),
+                        const Flexible(
+                          child: Text(
+                            'En cochant la case, vous acceptez la politique de confidentialité.',
+                            style: TextStyle(fontSize: 14),
+                            textAlign: TextAlign.center, // Centre le texte
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CustomButton(text: 'Annuler', onPressed: _resetFields),
-                    CustomButton(text: 'Valider', onPressed: _validateAndSubmit),
+                    // Utilisation du widget CustomButton ou CustomButtonInactive selon l'état de la checkbox
+                    _isPolicyAccepted
+                        ? CustomButton(text: 'Valider', onPressed: _validateAndSubmit)
+                        : CustomButtonInactif (text: 'Valider', onPressed: _resetFields),
                   ],
                 ),
               ],
@@ -170,7 +207,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   }
 
   void _resetFields() {
-    // Clear all fields
+    // Effacement de tous les champs
     _firstnameController.clear();
     _lastnameController.clear();
     _emailController.clear();
