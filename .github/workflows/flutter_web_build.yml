@@ -6,13 +6,22 @@ on:
 jobs:
   build:
     name: Build Web
-    env:
-      my_secret: ${{secrets.commit_secret}}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: subosito/flutter-action@v1
-      - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        run: |
+          # Crée un répertoire .ssh
+          mkdir -p ~/.ssh
+          # Ajoute la clé privée SSH stockée dans le secret GitHub
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          # Définit les permissions pour la clé privée SSH
+          chmod 600 ~/.ssh/id_rsa
+          # Ajoute le serveur distant à la liste des hôtes connus
+          ssh-keyscan -H 82.66.110.4 >> ~/.ssh/known_hosts
+
+      - name: Deploy application via SSH
+        run: |
+          ssh romain@82.66.110.4 'touch helloworld'
