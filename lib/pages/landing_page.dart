@@ -4,7 +4,7 @@ import 'package:resources_relationnelles_flutter/pages/ressources/liste_ressourc
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_sidebar.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 
 void main() {
   runApp(const ResourcesRelationellesApp());
