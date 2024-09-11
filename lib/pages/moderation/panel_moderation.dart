@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 
 import '../../widgets/custom_appbar.dart';
 import 'lister_commentaires.dart';
 import 'lister_ressources_restreintes.dart';
 
 class PanelModeration extends StatelessWidget {
+  const PanelModeration({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,34 +17,34 @@ class PanelModeration extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Accepter des ressources', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
+            const Text('Accepter des ressources', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
             FloatingActionButton(
               heroTag: 'ressource',
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListerRessourcesRestreintesPage()),
+                  MaterialPageRoute(builder: (context) => const ListerRessourcesRestreintesPage()),
                 );
               },
-              child: Icon(Icons.check),
               tooltip: 'Accepter des ressources',
               backgroundColor: Colors.green,
+              child: const Icon(Icons.check),
             ),
-            SizedBox(height: 20),
-            Text('Modérer les commentaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
+            const Text('Modérer les commentaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
             FloatingActionButton(
               heroTag: 'comment',
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListerCommentairesPage()), // Remplacez par la page de modification
+                  MaterialPageRoute(builder: (context) => const ListerCommentairesPage()), // Remplacez par la page de modification
                 );
               },
-              child: Icon(Icons.comment_outlined),
               tooltip: 'Voir les commentaires',
               backgroundColor: const Color(0xFF03989E),
+              child: const Icon(Icons.comment_outlined),
             ),
           ],
         ),

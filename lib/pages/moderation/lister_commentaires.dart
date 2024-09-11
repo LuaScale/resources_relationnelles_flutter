@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:resources_relationnelles_flutter/classes/ressource.dart';
-import 'package:resources_relationnelles_flutter/pages/ressources/detail_ressource.dart';
 import 'package:resources_relationnelles_flutter/services/commentaire_services.dart';
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
-import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 import '../../classes/commentaire.dart';
@@ -106,7 +102,7 @@ class _ListerCommentairesPageState extends State<ListerCommentairesPage> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: ListTile(
                       title: Text(snapshot.data![index].contenu),
                       enabled: true,

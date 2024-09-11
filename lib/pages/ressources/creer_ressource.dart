@@ -14,7 +14,7 @@ import '../../widgets/ressource_categorie_select.dart';
 import '../../widgets/ressource_type_select.dart';
 
 class CreerRessourcePage extends StatefulWidget {
-  const CreerRessourcePage({Key? key}) : super(key: key);
+  const CreerRessourcePage({super.key});
 
   @override
   _CreerRessourcePageState createState() => _CreerRessourcePageState();

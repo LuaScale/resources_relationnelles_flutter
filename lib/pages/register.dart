@@ -11,7 +11,7 @@ import 'package:resources_relationnelles_flutter/widgets/image_display.dart'; //
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({super.key});
 
   @override
   RegistrationPageState createState() => RegistrationPageState();

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,7 +9,6 @@ import 'package:resources_relationnelles_flutter/services/get_user.dart';
 import 'package:resources_relationnelles_flutter/services/ressource_services.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
-import '../../services/secure_storage.dart';
 
 Future<List<Ressource>> fetchRessources() async {
   String? cle = dotenv.env['API_KEY'];
@@ -101,7 +99,7 @@ class _ListerRessourcesRestreintesPageState extends State<ListerRessourcesRestre
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: ListTile(
                       leading: Image.network('http://82.66.110.4:8000/${snapshot.data![index].fileUrl!}'),
                       title: Text(snapshot.data![index].titre),

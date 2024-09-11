@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/commentaires/ajout_commentaire.dart';
@@ -76,7 +75,7 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                       '${snapshot.data!.dateModification.year}'),
                   const Divider(),
                   Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: Text(snapshot.data!.contenu!),
                   ),
                     FloatingActionButton(
@@ -93,7 +92,7 @@ class _ListerRessourcesPageState extends State<DetailRessourcePage> {
                       itemCount: snapshot.data!.commentaires!.length,
                       itemBuilder: (context, index) {
                         return Card(
-                          margin: EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(20),
                           child: ListTile(
                           leading: const Icon(Icons.switch_account_outlined),
                           subtitle: Text(snapshot.data!.commentaires![index].contenu),

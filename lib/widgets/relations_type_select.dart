@@ -29,7 +29,7 @@ Future<List<RelationType>> fetchRelationsType() async {
 class RelationTypesDropdown extends StatefulWidget {
   final ValueChanged<RelationType?>? onValueChanged;
 
-  const RelationTypesDropdown({Key? key, this.onValueChanged}) : super(key: key);
+  const RelationTypesDropdown({super.key, this.onValueChanged});
 
   @override
   _RelationTypesDropdownState createState() => _RelationTypesDropdownState();

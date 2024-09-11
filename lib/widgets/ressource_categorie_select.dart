@@ -30,7 +30,7 @@ Future<List<RessourceCategorie>> fetchRessourceCategories() async {
 class RessourceCategoriesDropdown extends StatefulWidget {
   final ValueChanged<RessourceCategorie?>? onValueChanged;
 
-  const RessourceCategoriesDropdown({Key? key, this.onValueChanged}) : super(key: key);
+  const RessourceCategoriesDropdown({super.key, this.onValueChanged});
 
   @override
   _RessourceCategoriesDropdownState createState() => _RessourceCategoriesDropdownState();

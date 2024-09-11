@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:resources_relationnelles_flutter/pages/ressources/liste_ressources.dart';
@@ -14,15 +13,14 @@ import 'package:resources_relationnelles_flutter/widgets/password_input.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_button.dart';
 import 'package:resources_relationnelles_flutter/widgets/custom_appbar.dart';
 
-import '../classes/utilisateur.dart';
 import '../services/get_user.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const Login());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class Login extends StatelessWidget {
+  const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthenticationPage extends StatefulWidget {
-  const AuthenticationPage({Key? key}) : super(key: key);
+  const AuthenticationPage({super.key});
 
   @override
   _AuthenticationPageState createState() => _AuthenticationPageState();

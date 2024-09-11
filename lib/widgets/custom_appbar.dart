@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 import 'package:resources_relationnelles_flutter/pages/admin/admin_panel.dart';
+import 'package:resources_relationnelles_flutter/pages/admin/admin_stats.dart';
 import 'package:resources_relationnelles_flutter/pages/favorite/liste_favorites.dart';
+import 'package:resources_relationnelles_flutter/pages/landing_page.dart';
 import 'package:resources_relationnelles_flutter/pages/moderation/panel_moderation.dart';
 import 'package:resources_relationnelles_flutter/pages/ressources/creer_ressource.dart';
 import 'package:resources_relationnelles_flutter/pages/utilisateur/profil.dart';
-import 'package:resources_relationnelles_flutter/main.dart';
 import 'package:resources_relationnelles_flutter/services/get_user.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,9 +13,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Text? title;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     this.title,
-  }) : super(key: key);
+  });
 
   dynamic getUser() async {
     return await fetchUtilisateurByToken();
@@ -41,9 +41,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: [
                 if(user != false && user.roles.contains('ROLE_ADMIN'))
                 IconButton(
+                  icon: const Icon(Icons.query_stats),
+                  onPressed:  () {
+                          // Naviguer vers la page "Stats"
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const AdminStats()),
+                          );
+                        }
+                ),
+                if(user != false && user.roles.contains('ROLE_ADMIN'))
+                IconButton(
                   icon: const Icon(Icons.admin_panel_settings),
                   onPressed:  () {
-                          // Naviguer vers la page "profil"
+                          // Naviguer vers la page "AdminPanelPage"
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const AdminPanelPage()),
@@ -57,7 +68,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           // Naviguer vers la page "profil"
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => PanelModeration()),
+                            MaterialPageRoute(builder: (context) => const PanelModeration()),
                           );
                         }
                 ),
@@ -67,7 +78,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           // Naviguer vers la page "accueil"
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const MyApp()),
+                            MaterialPageRoute(builder: (context) => const LandingPage()),
                           );
                         }
                 ),

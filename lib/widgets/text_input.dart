@@ -5,12 +5,12 @@ class CustomTextInput extends StatelessWidget {
   final String labelText;
 
   const CustomTextInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.labelText, 
     required int maxLines,
     required int maxLength,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

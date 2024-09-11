@@ -16,6 +16,7 @@ class Ressource {
   final RelationType relationType;
   final bool? isVisible;
   final bool? isAccepte;
+  final bool? isFavorite;
   final Utilisateur utilisateur;
   final List<Commentaire>? commentaires;
   final List<Partage>? partages;
@@ -33,6 +34,7 @@ class Ressource {
     required this.relationType,
     this.isVisible,
     this.isAccepte,
+    this.isFavorite,
     required this.utilisateur,
     this.commentaires,
     this.partages,
@@ -51,6 +53,7 @@ class Ressource {
     RelationType relationType = RelationType.fromJson(json["relationType"] as Map<String, dynamic>);
     final isVisible = json['visible'] as bool?;
     final isAccepte = json['accepted'] as bool?;
+    final isFavorite = json['isFavorite'] as bool?;
     Utilisateur utilisateur = Utilisateur.fromJson(json["user"] as Map<String, dynamic>);
     var commentaires = json['comments'] == null ? null : json['comments']['hydra:member'] as List<dynamic>?;
     final partages = json['shares'] as List<Partage>?;
@@ -67,6 +70,7 @@ class Ressource {
         relationType: relationType,
         isVisible: isVisible,
         isAccepte: isAccepte,
+        isFavorite: isFavorite,
         utilisateur: utilisateur,
         commentaires: commentaires != null
             ? commentaires.map((commentaire) =>

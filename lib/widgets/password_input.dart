@@ -6,11 +6,11 @@ class PasswordInput extends StatelessWidget {
   final Function onPressed;
 
   const PasswordInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.obscureText,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

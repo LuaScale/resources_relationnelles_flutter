@@ -5,10 +5,10 @@ class CustomButtonInactif extends StatelessWidget {
   final Function onPressed;
 
   const CustomButtonInactif({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

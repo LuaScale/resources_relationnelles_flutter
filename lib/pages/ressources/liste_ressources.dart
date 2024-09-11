@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
-
+import '../../widgets/custom_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -80,8 +79,9 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
                     );
     return Scaffold(
       appBar: const CustomAppBar(
-          title: Text('Ressources'),
+          title: Text('Ressources Publiées Récemment'),
       ),
+      drawer: const CustomSidebar(),
       body:
        Center(
         child: FutureBuilder<List<Ressource>>(
@@ -93,7 +93,7 @@ class _ListerRessourcesPageState extends State<ListerRessourcesPage> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return Card(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     child: ListTile(
                     leading: Image.network('http://82.66.110.4:8000/${snapshot.data![index].fileUrl!}'),
                     title: Text(snapshot.data![index].titre),

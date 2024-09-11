@@ -7,12 +7,12 @@ class CustomTextArea extends StatelessWidget {
   final int maxLength;
 
   const CustomTextArea({
-    Key? key,
+    super.key,
     required this.controller,
     required this.labelText,
     required this.maxLines,
     required this.maxLength,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

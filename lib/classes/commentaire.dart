@@ -1,4 +1,3 @@
-import 'package:resources_relationnelles_flutter/classes/ressource.dart';
 import 'package:resources_relationnelles_flutter/classes/utilisateur.dart';
 
 class Commentaire {

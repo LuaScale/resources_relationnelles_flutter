@@ -5,10 +5,10 @@ class ImageDisplay extends StatelessWidget {
   final double height;
 
   const ImageDisplay({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
