@@ -35,6 +35,6 @@ jobs:
       - name: Deploy application via SSH
         run: | 
           scp -r build/web romain@82.66.110.4:/var/www/flutter_web
-          ssh romain@82.66.110.4 "cd /var/www/flutter_web"
-          echo ${{ secrets.SUDO_PASSWORD }} | sudo -S docker-compose down && sudo -S docker-compose up
+          ssh romain@82.66.110.4 "cd /var/www/flutter_web && echo ${{ secrets.SUDO_PASSWORD }} | sudo -S docker-compose down && sudo -S docker-compose up"
+          
           
