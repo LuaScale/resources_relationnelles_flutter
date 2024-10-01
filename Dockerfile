@@ -1,4 +1,4 @@
-FROM cirrusci/flutter:stable AS build
+FROM ghcr.io/cirruslabs/flutter:3.24.3 AS build
 WORKDIR /app
 RUN git clone https://github.com/LuaScale/resources_relationnelles_flutter.git .
 RUN flutter upgrade
