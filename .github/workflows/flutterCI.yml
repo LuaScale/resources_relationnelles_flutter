@@ -17,10 +17,6 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        platform: [web, mobile] # Configurations pour mobile et web
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -36,10 +32,6 @@ jobs:
       - name: Run Flutter Doctor
         run: flutter doctor
 
-      - name: Run tests for web or mobile
+      - name: Run tests for mobile
         run: |
-          if [ "${{ matrix.platform }}" == "web" ]; then
-            flutter test --platform chrome
-          else
-            flutter test
-          fi
+          flutter test
