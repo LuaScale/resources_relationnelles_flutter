@@ -1,6 +1,6 @@
 FROM cirrusci/flutter:stable AS build
 WORKDIR /app
-RUN git clone https://github.com/votre-utilisateur/votre-depot.git .
+RUN git clone https://github.com/LuaScale/resources_relationnelles_flutter.git.
 RUN flutter pub get
 RUN flutter build web --release
 FROM nginx:stable-alpine AS production
