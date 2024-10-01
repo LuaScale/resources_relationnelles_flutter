@@ -1,0 +1,45 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      [ "TpIndividuel" ]
+  pull_request:
+    branches:
+      [ "TpIndividuel" ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [web, mobile] # Configurations pour mobile et web
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Run Flutter Doctor
+        run: flutter doctor
+
+      - name: Run tests for web or mobile
+        run: |
+          if [ "${{ matrix.platform }}" == "web" ]; then
+            flutter test --platform chrome
+          else
+            flutter test
+          fi
