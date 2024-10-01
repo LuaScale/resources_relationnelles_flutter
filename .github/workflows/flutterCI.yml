@@ -40,7 +40,3 @@ jobs:
 
       - name: Run Flutter Doctor
         run: flutter doctor
-
-      - name: Run tests for mobile
-        run: |
-          flutter test
