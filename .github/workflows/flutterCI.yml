@@ -25,6 +25,15 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
+          
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Build Docker Image
+        run: docker build -t my-flutter-app:latest .
+
+      - name: Deploy Docker Image
+        run: docker run -d -p 80:80 my-flutter-app:latest
 
       - name: Install Flutter dependencies
         run: flutter pub get
